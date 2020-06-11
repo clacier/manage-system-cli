@@ -1,0 +1,160 @@
+@import '~ant-design-vue/es/style/themes/default.less';
+
+html,
+body,
+#app,
+#root {
+  height: 100%;
+}
+
+.colorWeak {
+  filter: invert(80%);
+}
+
+.ant-layout.layout-basic {
+  height: 100vh;
+  min-height: 100vh;
+}
+
+.cursor {
+  cursor: pointer;
+}
+
+.font_ash {
+  color: #999999;
+}
+
+.flex_box {
+  display: flex;
+  align-items: center;
+}
+
+canvas {
+  display: block;
+}
+
+.ant-modal {
+  // position: relative;
+  // position: absolute;
+  // left: 50%;
+  // margin-left: -260px;
+}
+
+// .modal_box {
+//   position: fixed;
+//   z-index: 9999;
+//   background: #ffffff;
+//   height: 100%;
+//   left: 50%;
+//   top: 200px;
+//   margin-left: -260px;
+//   width: 520px;
+// }
+
+.modal-title {
+  cursor: move;
+}
+
+// .drag-mask {
+//   position: fixed;
+//   left: 0;
+//   right: 0;
+//   top: 0;
+//   bottom: 0;
+//   width: 520px;
+// }
+
+.no_data {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  font-size: 16px;
+  width: 150px;
+  color: #999999;
+  text-align: center;
+  margin-left: -75px;
+}
+
+body {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font_bold {
+  font-weight: bold;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+// 数据列表 样式
+.table-alert {
+  margin-bottom: 16px;
+}
+
+// 数据列表 操作
+.table-operator {
+  margin-bottom: 18px;
+
+  button {
+    margin-right: 8px;
+  }
+}
+
+// 数据列表 搜索条件
+.table-page-search-wrapper {
+
+  .ant-form-inline {
+    .ant-form-item {
+      display: flex;
+      margin-bottom: 24px;
+      margin-right: 0;
+
+      .ant-form-item-control-wrapper {
+        flex: 1 1;
+        display: inline-block;
+        vertical-align: middle;
+      }
+
+      >.ant-form-item-label {
+        line-height: 32px;
+        padding-right: 8px;
+        width: auto;
+      }
+
+      .ant-form-item-control {
+        height: 32px;
+        line-height: 32px;
+      }
+    }
+  }
+
+  .table-page-search-submitButtons {
+    display: block;
+    margin-bottom: 24px;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: @screen-xs) {
+  .ant-table {
+    width: 100%;
+    overflow-x: auto;
+
+    &-thead>tr,
+    &-tbody>tr {
+
+      >th,
+      >td {
+        white-space: pre;
+
+        >span {
+          display: block;
+        }
+      }
+    }
+  }
+}
