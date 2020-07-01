@@ -16,7 +16,7 @@
           <div class="modal_body">
             <slot></slot>
           </div>
-          <div class="modal_bottom">
+          <div class="modal_bottom" v-if="!hideFooter">
             <a-button type="primary" @click="handleOk" style="margin-right:10px">确认</a-button>
             <a-button @click="handleCancel">取消</a-button>
           </div>
@@ -38,6 +38,11 @@ export default {
       required: false
     },
     visible: {
+      default: false,
+      required: false
+    },
+    hideFooter: {
+      type: [Boolean],
       default: false,
       required: false
     },
@@ -105,10 +110,12 @@ export default {
 .slide-fade-enter, .slide-fade-leave-to
 /* .slide-fade-leave-active for below version 2.1.8 */ {
   // transform: translateX(500px);
+  z-index: 99;
   transform: scale(0);
   opacity: 0;
 }
 .modal_box {
+  position: relative;
   .modal_mask {
     position: fixed;
     left: 0;
@@ -132,12 +139,15 @@ export default {
     left: 50%;
     z-index: 200;
     margin-left: -260px;
-    top: 15vh;
+    top: 10vh;
+
     // transition-duration: 1s;
     background: #ffffff;
   }
   .modal_body {
     padding: 15px;
+    max-height: 70vh;
+    overflow: auto;
   }
   .modal_title {
     width: 90%;
