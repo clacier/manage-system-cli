@@ -1,16 +1,10 @@
 // eslint-disable-next-line
-import {
-  UserLayout,
-  BasicLayout,
-  RouteView,
-  PageView
-} from '@/layouts'
+import { UserLayout, BasicLayout, RouteView, PageView } from '@/layouts'
 // import {
 //   bxAnaalyse
 // } from '@/core/icons'
 
 export const asyncRouterMap = [
-
   {
     path: '/',
     name: 'index',
@@ -20,23 +14,24 @@ export const asyncRouterMap = [
       hiddenHeaderContent: false
     },
     redirect: '/collectionNode',
-    children: [{
+    children: [
+      {
         path: '/collectionNode',
         name: 'collectionNode',
         component: PageView,
         redirect: '/collectionNode/manage',
         meta: {
           title: '采集点',
-          icon: 'check-circle-o',
+          icon: 'check-circle-o'
         },
-        children: [{
+        children: [
+          {
             path: '/collectionNode/manage',
             name: 'collectionNodeManage',
             component: () => import('@/views/collectionNode/manage'),
             meta: {
               title: '站点管理',
-              keepAlive: false,
-
+              keepAlive: false
             }
           },
           {
@@ -45,7 +40,7 @@ export const asyncRouterMap = [
             component: () => import('@/views/collectionNode/taskManage'),
             meta: {
               title: '站点任务',
-              keepAlive: false,
+              keepAlive: false
             }
           },
           {
@@ -54,109 +49,88 @@ export const asyncRouterMap = [
             component: () => import('@/views/collectionNode/create'),
             meta: {
               title: '站点注册',
-              keepAlive: false,
+              keepAlive: false
             }
-          },
-        ]
-      },
-      {
-        path: '/collectionSource',
-        name: 'collectionSource',
-        component: PageView,
-
-        redirect: '/collectionSource/manage',
-        meta: {
-          title: '采集源',
-          icon: 'check-circle-o',
-        },
-        children: [{
-          path: '/collectionSource/manage',
-          name: 'collectionSourceManage',
-          component: () => import('@/views/collectionSource/manage'),
-          meta: {
-            title: '采集源管理',
-            keepAlive: false,
-            // hiddenHeaderContent: true,
           }
-        }]
-      },
-
-
+        ]
+      }
       // result
-      {
-        path: '/result',
-        name: 'result',
-        component: RouteView,
-        redirect: '/result/success',
-        meta: {
-          title: '结果页',
-          icon: 'check-circle-o',
-          permission: ['result']
-        },
-        children: [{
-            path: '/result/success',
-            name: 'ResultSuccess',
-            component: () => import('@/views/result/Success'),
-            meta: {
-              title: '成功',
-              keepAlive: false,
-              hiddenHeaderContent: true,
-              permission: ['result']
-            }
-          },
-          {
-            path: '/result/fail',
-            name: 'ResultFail',
-            component: () => import('@/views/result/Error'),
-            meta: {
-              title: '失败',
-              keepAlive: false,
-              hiddenHeaderContent: true,
-              permission: ['result']
-            }
-          }
-        ]
-      },
-      // Exception
-      {
-        path: '/exception',
-        name: 'exception',
-        component: RouteView,
-        redirect: '/exception/403',
-        meta: {
-          title: '异常页',
-          icon: 'warning',
-          permission: ['exception']
-        },
-        children: [{
-            path: '/exception/403',
-            name: 'Exception403',
-            component: () => import('@/views/exception/403'),
-            meta: {
-              title: '403',
-              permission: ['exception']
-            }
-          },
-          {
-            path: '/exception/404',
-            name: 'Exception404',
-            component: () => import('@/views/exception/404'),
-            meta: {
-              title: '404',
-              permission: ['exception']
-            }
-          },
-          {
-            path: '/exception/500',
-            name: 'Exception500',
-            component: () => import('@/views/exception/500'),
-            meta: {
-              title: '500',
-              permission: ['exception']
-            }
-          }
-        ]
-      },
+      //   {
+      //     path: '/result',
+      //     name: 'result',
+      //     component: RouteView,
+      //     redirect: '/result/success',
+      //     meta: {
+      //       title: '结果页',
+      //       icon: 'check-circle-o',
+      //       permission: ['result']
+      //     },
+      //     children: [
+      //       {
+      //         path: '/result/success',
+      //         name: 'ResultSuccess',
+      //         component: () => import('@/views/result/Success'),
+      //         meta: {
+      //           title: '成功',
+      //           keepAlive: false,
+      //           hiddenHeaderContent: true,
+      //           permission: ['result']
+      //         }
+      //       },
+      //       {
+      //         path: '/result/fail',
+      //         name: 'ResultFail',
+      //         component: () => import('@/views/result/Error'),
+      //         meta: {
+      //           title: '失败',
+      //           keepAlive: false,
+      //           hiddenHeaderContent: true,
+      //           permission: ['result']
+      //         }
+      //       }
+      //     ]
+      //   },
+      //   // Exception
+      //   {
+      //     path: '/exception',
+      //     name: 'exception',
+      //     component: RouteView,
+      //     redirect: '/exception/403',
+      //     meta: {
+      //       title: '异常页',
+      //       icon: 'warning',
+      //       permission: ['exception']
+      //     },
+      //     children: [
+      //       {
+      //         path: '/exception/403',
+      //         name: 'Exception403',
+      //         component: () => import('@/views/exception/403'),
+      //         meta: {
+      //           title: '403',
+      //           permission: ['exception']
+      //         }
+      //       },
+      //       {
+      //         path: '/exception/404',
+      //         name: 'Exception404',
+      //         component: () => import('@/views/exception/404'),
+      //         meta: {
+      //           title: '404',
+      //           permission: ['exception']
+      //         }
+      //       },
+      //       {
+      //         path: '/exception/500',
+      //         name: 'Exception500',
+      //         component: () => import('@/views/exception/500'),
+      //         meta: {
+      //           title: '500',
+      //           permission: ['exception']
+      //         }
+      //       }
+      //     ]
+      //   }
       // other
       /*
       {
@@ -232,12 +206,14 @@ export const asyncRouterMap = [
  * 基础路由
  * @type { *[] }
  */
-export const constantRouterMap = [{
+export const constantRouterMap = [
+  {
     path: '/user',
     component: UserLayout,
     redirect: '/user/login',
     hidden: true,
-    children: [{
+    children: [
+      {
         path: 'login',
         name: 'login',
         component: () => import('@/views/user/Login')

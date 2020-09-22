@@ -25,7 +25,7 @@ export default {
   menu: {
     locale: true
   },
-  title: '数据采集',
+  title: '智能物流',
   multiTab: true,
   pwa: true,
   iconfontUrl: '',

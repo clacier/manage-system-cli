@@ -1,6 +1,6 @@
 <template>
   <pro-layout
-    title="数据采集器"
+    title="智能物流"
     :menus="menus"
     :collapsed="collapsed"
     :mediaQuery="query"
@@ -11,6 +11,7 @@
     :i18nRender="i18nRender"
     v-bind="settings"
   >
+    <!-- <MultiTab /> -->
     <setting-drawer :settings="settings" @change="handleSettingChange" />
     <template v-slot:rightContentRender>
       <right-content :top-menu="settings.layout === 'topmenu'" :theme="settings.theme" />
@@ -20,7 +21,9 @@
 </template>
 
 <script>
+import MultiTab from '@/components/MultiTab'
 import { SettingDrawer } from '@ant-design-vue/pro-layout'
+// import SettingDrawer from '@/components/SettingDrawer'
 import { i18nRender } from '@/locales'
 import { mapState } from 'vuex'
 import { SIDEBAR_TYPE, TOGGLE_MOBILE_TYPE } from '@/store/mutation-types'
@@ -28,13 +31,14 @@ import { SIDEBAR_TYPE, TOGGLE_MOBILE_TYPE } from '@/store/mutation-types'
 import RightContent from '@/components/GlobalHeader/RightContent'
 import GlobalFooter from '@/components/GlobalFooter'
 import LogoSvg from '../assets/logo.svg?inline'
-
+import { asyncRouterMap } from '@/config/router.config.js'
 export default {
   name: 'BasicLayout',
   components: {
     SettingDrawer,
     RightContent,
-    GlobalFooter
+    GlobalFooter,
+    MultiTab,
   },
   data() {
     return {
@@ -56,24 +60,26 @@ export default {
         colorWeak: false,
 
         hideHintAlert: false,
-        hideCopyButton: false
+        hideCopyButton: false,
       },
       // 媒体查询
       query: {},
 
       // 是否手机模式
-      isMobile: false
+      isMobile: false,
     }
   },
   computed: {
     ...mapState({
       // 动态主路由
-      mainMenu: state => state.permission.addRouters
-    })
+      mainMenu: (state) => state.permission.addRouters,
+    }),
   },
   created() {
-    const routes = this.mainMenu.find(item => item.path === '/')
-    this.menus = (routes && routes.children) || []
+    this.menus = asyncRouterMap.find((item) => item.path === '/').children
+    const routes = this.mainMenu.find((item) => item.path === '/')
+    // this.menus = (routes && routes.children) || []
+    this.collapsed = !this.sidebarOpened
     // 处理侧栏收起状态
     this.$watch('collapsed', () => {
       this.$store.commit(SIDEBAR_TYPE, this.collapsed)
@@ -130,8 +136,8 @@ export default {
     },
     logoRender() {
       return <LogoSvg />
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -186,15 +186,14 @@
 <script>
 const formItemLayout = {
   labelCol: { span: 6 },
-  wrapperCol: { span: 18 }
+  wrapperCol: { span: 18 },
 }
 const formTailLayout = {
   labelCol: { span: 4 },
-  wrapperCol: { span: 8, offset: 4 }
+  wrapperCol: { span: 8, offset: 4 },
 }
 import { getList, add, edit, deleteNode, sendOne, send, getConnectSensor } from '@/api/collectionNode/taskManage'
 import { getList as getNodeList } from '@/api/collectionNode/manage'
-import { getList as getSourceList } from '@/api/collectionSource/manage'
 import { sourceNoGetList } from '@/api/sensor'
 import { message, Modal } from 'ant-design-vue'
 import dragModal from '@/my-components/Modal'
@@ -210,8 +209,8 @@ export default {
       selectSourceList: [],
       sensorList: [
         {
-          sensorName: '1'
-        }
+          sensorName: '1',
+        },
       ],
       checkSensorList: [],
       renderA: false,
@@ -229,7 +228,7 @@ export default {
       formTailLayout,
       visible: false,
       page: 1,
-      pageSize: 10
+      pageSize: 10,
     }
   },
   created() {
@@ -237,7 +236,7 @@ export default {
     this.getSourceList()
     for (let i = 0; i < 10; i++) {
       this.sensorList.push({
-        sensorName: i
+        sensorName: i,
       })
     }
     // this.getList()
@@ -270,13 +269,13 @@ export default {
         content: '请确认发送该任务,发送后不可编辑？',
         onOk: () => {
           this.sendOne(taskId)
-        }
+        },
       })
     },
     async sendOne(id) {
       const data = {
         taskId: id,
-        taskStatus: 1
+        taskStatus: 1,
       }
       const res = await sendOne(data)
       if (res.code === 2000) {
@@ -300,13 +299,13 @@ export default {
       item.isCheck = !item.isCheck
     },
     selectSource(val) {
-      this.sourceNo = this.selectSourceList.filter(item => item.sourceId === val)[0].sourceNo
+      this.sourceNo = this.selectSourceList.filter((item) => item.sourceId === val)[0].sourceNo
       // this.sourceNoGetSensor()
     },
 
     async sourceNoGetSensor() {
       const params = {
-        sourceNo: this.sourceNo
+        sourceNo: this.sourceNo,
       }
       const res = await sourceNoGetList(params)
       if (res.code === 2000) {
@@ -333,19 +332,19 @@ export default {
     async getConnectSensor(id) {
       const res = await getConnectSensor({
         sourceNo: '',
-        taskId: id
+        taskId: id,
       })
       if (res.code === 2000) {
         console.log(res)
         this.sensorList = res.data.allSensorName
         let checkList = res.data.relationSensorName
-        this.sensorList.forEach(item => (item.isCheck = checkList.includes(item) ? true : false))
+        this.sensorList.forEach((item) => (item.isCheck = checkList.includes(item) ? true : false))
       }
     },
     handleEdit(item) {
       this.$store.commit('set_GetSensor', true)
       item.taskStatus == 1 ? (item.taskStatusSwitch = true) : (item.taskStatusSwitch = false)
-      this.sourceNo = this.selectSourceList.filter(i => i.sourceId === item.sourceId)[0].sourceNo
+      this.sourceNo = this.selectSourceList.filter((i) => i.sourceId === item.sourceId)[0].sourceNo
       this.detailInfo = item
       this.getConnectSensor(item.taskId)
       this.taskId = item.taskId
@@ -380,7 +379,7 @@ export default {
         taskName: this.searchText,
         pageSize: this.pageSize,
         siteId: this.siteId,
-        pageNum: this.page - 1
+        pageNum: this.page - 1,
       }
       const res = await getList(params)
       if (res.code === 2000) {
@@ -415,7 +414,7 @@ export default {
         content: '是否删除该任务？',
         onOk: () => {
           this.deleteNode(taskId)
-        }
+        },
       })
     },
     async deleteNode(taskId) {
@@ -430,7 +429,7 @@ export default {
         if (!err) {
           console.log(values)
           let checkList = []
-          this.sensorList.forEach(item => {
+          this.sensorList.forEach((item) => {
             if (item.isCheck) {
               checkList.push(item.sensorName)
             }
@@ -449,8 +448,8 @@ export default {
           }
         }
       })
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="less" scoped>
