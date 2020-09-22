@@ -3,22 +3,22 @@
     <div v-if="renderA"></div>
     <div class="table_contanier">
       <div class="table_box" :style="`width:${tableW}px`">
-        <div class="table_header" :style="`width:${tableW-scrollWidth}px`">
+        <div class="table_header" :style="`width:${tableW - scrollWidth}px`">
           <div
             v-if="showCheck"
             class="table_header_item"
-            :style="`width:50px;text-align:center;border:${showBoder?'':'none'}`"
+            :style="`width:50px;text-align:center;border:${showBoder ? '' : 'none'}`"
           >
-            <input @change="handleAllCheck" v-model="checkAll" type="checkbox" />
+            <a-checkbox @change="handleAllCheck" v-model="checkAll"></a-checkbox>
           </div>
           <div
             class="table_header_item"
-            v-for="(item,index) in cloums"
+            v-for="(item, index) in cloums"
             :key="item.title"
-            :style="`width:${item.width}px;text-align:${item.align};border:${showBoder?'':'none'}`"
+            :style="`width:${item.width}px;text-align:${item.align};border:${showBoder ? '' : 'none'}`"
           >
-            {{item.title}}
-            <div v-if="widthDrag" class="sub" @mousedown="splitDown($event,index)" />
+            {{ item.title }}
+            <div v-if="widthDrag" class="sub" @mousedown="splitDown($event, index)" />
           </div>
         </div>
         <div v-if="isDrag" class="xian" :style="`left:${xian_left}px`" />
@@ -27,79 +27,89 @@
           v-if="virtualScroll"
           class="table_content"
           @scroll="hanldeScroll"
-          :style="`height:${viewH}px;overflow-y:auto;position:${dataList.length==0?'relative':''}; min-height:${dataList.length==0?'300px':''}`"
+          :style="
+            `height:${viewH}px;overflow-y:auto;position:${dataList.length == 0 ? 'relative' : ''}; min-height:${
+              dataList.length == 0 ? '300px' : ''
+            }`
+          "
         >
-          <div :style="{height:scorllH}" ref="table_content">
+          <div :style="{ height: scorllH }" ref="table_content">
             <div :style="`transform:translateY(${offSetY}px); `">
               <div
                 class="table_conten_item_box"
-                v-for="(item,index) in list"
-                :style="{height:itemH+'px'}"
+                v-for="(item, index) in list"
+                :style="{ height: itemH + 'px' }"
               >
                 <div
                   v-if="showCheck"
                   class="table_content_item"
-                  :style="`width:50px;align-items:center;justify-content:center;border:${showBoder?'':'none'}`"
+                  :style="`width:50px;align-items:center;justify-content:center;border:${showBoder ? '' : 'none'}`"
                 >
                   <input @change="checkChange(item)" :checked="item.isCheck" type="checkbox" />
                 </div>
                 <div
-                  v-for="(item2,key) in cloums"
+                  v-for="(item2, key) in cloums"
                   :style="`width:${item2.width}px;text-align:${item2.align}`"
                 >
                   <div
                     class="table_content_item"
-                    :style="`justify-content:${item2.align};align-items:${item2.align};border:${showBoder?'':'none'}`"
+                    :style="
+                      `justify-content:${item2.align};align-items:${item2.align};border:${showBoder ? '' : 'none'}`
+                    "
                   >
                     <slot v-if="item2.scopedSlots" :name="item2.key" :item="item" :index="index"></slot>
-                    <div v-else>{{item[item2.key]?item[item2.key]:'-'}}</div>
+                    <div v-else>{{ item[item2.key] ? item[item2.key] : '-' }}</div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="no_data" v-if="dataList.length==0">暂无数据~</div>
+          <div class="no_data" v-if="dataList.length == 0">
+            <a-empty description=" 暂无数据" />
+          </div>
         </div>
         <!-- 不设置虚拟滚动 -->
         <div
           class="table_content"
           v-else
           ref="table_content"
-          :style="`height:${scroll.y?scroll.y:''}px; position:${dataList.length==0?'relative':''}; min-height:${dataList.length==0?'300px':''}`"
+          :style="
+            `height:${scroll.y ? scroll.y + 'px' : 'auto'}; position:${
+              dataList.length == 0 ? 'relative' : ''
+            }; min-height:${dataList.length == 0 ? '300px' : ''}`
+          "
         >
           <div>
             <div
               class="table_conten_item_box"
-              :style="{height:itemH+'px'}"
-              v-for="(item,index) in list"
+              :style="{ height: itemH + 'px' }"
+              v-for="(item, index) in list"
             >
               <div
                 v-if="showCheck"
                 class="table_content_item"
-                :style="`width:50px;align-items:center;justify-content:center;border:${showBoder?'':'none'}`"
+                :style="`width:50px;align-items:center;justify-content:center;height:100%`"
               >
-                <input @change="checkChange(item)" :checked="item.isCheck" type="checkbox" />
+                <a-checkbox @change="checkChange(item)" :checked="item.isCheck"></a-checkbox>
               </div>
               <div
-                v-for="(item2,key) in cloums"
+                v-for="(item2, key) in cloums"
                 :style="`width:${item2.width}px;text-align:${item2.align}`"
               >
                 <div
                   class="table_content_item"
                   :style="`justify-content:${item2.align};align-items:${item2.align}`"
                 >
-                  <slot
-                    v-if="item2.scopedSlots"
-                    :name="item2.key"
-                    :item="item[item2.scopedSlots]?item[item2.scopedSlots]:item"
-                  ></slot>
-                  <div v-else>{{item[item2.key]?item[item2.key]:'-'}}</div>
+                  <slot v-if="item2.scopedSlots" :name="item2.key" :item="item"></slot>
+                  <div v-else>{{ item[item2.key] || item[item2.key] === 0 ? item[item2.key] : '-' }}</div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="no_data" v-if="dataList.length==0">暂无数据~</div>
+          <div class="no_data" v-if="dataList.length == 0">
+            <a-empty description=" 暂无数据" />
+          </div>
         </div>
       </div>
     </div>
@@ -111,7 +121,7 @@ export default {
   title: 'Table',
   watch: {
     dataList(val) {
-      console.log(val)
+      this.list = this.$props.dataList
       // 重新计算
       if (this.$props.virtualScroll) {
         // 计算总高度
@@ -119,41 +129,47 @@ export default {
         // 计算可视区域高度
         this.viewH = this.itemH * this.$props.itemNum
       }
-    }
+    },
+    rowCheck(val) {
+      this.showCheck = val
+    },
   },
   props: {
     itemNum: Number, //展示个数
     itemH: Number, // 表格单行高度
     dataList: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     widthDrag: {
       type: Boolean,
-      default: false
+      default: false,
     },
     cloums: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     scroll: {
       type: Object,
-      default: {
-        y: Number,
-        x: Number
-      }
+      default: () => {
+        return {
+          y: Number,
+          x: Number,
+        }
+      },
     },
     virtualScroll: {
       type: Boolean,
-      default: false
+      default: false,
     },
     showBoder: {
       type: Boolean,
-      default: false
+      default: false,
     },
     rowCheck: {
-      type: Function
-    }
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -162,7 +178,7 @@ export default {
       list: [],
       checkList: [],
       checkAll: false,
-      showCheck: true,
+      showCheck: false,
       isDrag: false,
       xian_left: '',
       viewH: '',
@@ -174,7 +190,7 @@ export default {
       scorllH: '', // 列表总高度
       offSetY: '',
       page: 1,
-      pageSize: 10
+      pageSize: 10,
     }
   },
   created() {
@@ -184,7 +200,7 @@ export default {
       // this.$props.dataList.forEarch((item.isCheck = false))
     }
     console.log(this.dataList)
-    this.cloums.forEach(item => {
+    this.cloums.forEach((item) => {
       this.tableW += parseInt(item.width)
     })
     if (this.$props.virtualScroll) {
@@ -217,16 +233,17 @@ export default {
     handleAllCheck(e) {
       console.log(e)
       if (e.target.checked) {
-        this.list.forEach(item => (item.isCheck = true))
-        this.dataList.forEach(item => (item.isCheck = true))
+        this.list.forEach((item) => (item.isCheck = true))
+        this.dataList.forEach((item) => (item.isCheck = true))
         this.renderA = !this.renderA
         this.checkList = this.dataList
       } else {
-        this.list.forEach(item => (item.isCheck = true))
-        this.dataList.forEach(item => (item.isCheck = false))
+        this.list.forEach((item) => (item.isCheck = true))
+        this.dataList.forEach((item) => (item.isCheck = false))
         this.renderA = !this.renderA
         this.checkList = []
       }
+      this.$emit('checkChange', this.checkList)
       // this.$props.rowCheck(this.checkList)
     },
     checkChange(item) {
@@ -235,13 +252,15 @@ export default {
         this.checkList.push(item)
       } else {
         console.time()
-        this.checkList = this.checkList.filter(i => i.num != item.num)
+        this.checkList = this.checkList.filter((i) => i.num != item.num)
         console.timeEnd()
         this.checkAll = false
       }
+      this.renderA = !this.renderA
+      this.$emit('checkChange', this.checkList)
       // this.$props.rowCheck(this.checkList)
     },
-    splitDown: function(e, index) {
+    splitDown: function (e, index) {
       // 鼠标按下
       const left = e.offsetX
       const startX = e.pageX
@@ -250,7 +269,7 @@ export default {
       const parentNode = e.target.parentNode
       const width = parseInt(this.cloums[index].width)
       const tableW = this.tableW
-      window.onmousemove = e => {
+      window.onmousemove = (e) => {
         if (this.isDrag) {
           document.body.style.cursor = 'col-resize'
           // this.xian_left = Math.round(e.pageX )
@@ -266,7 +285,7 @@ export default {
           // parentNode.style.width = width + l + 'px' //td 改变宽度
         }
       }
-      window.onmouseup = e => {
+      window.onmouseup = (e) => {
         // 鼠标松开
         if (this.isDrag) {
           const l = e.pageX - startX
@@ -281,8 +300,8 @@ export default {
           window.onmouseup = null
         }
       }
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="less" scoped>
@@ -293,9 +312,8 @@ export default {
   .table_box {
     .table_header {
       width: 100%;
-      background: #f0f0f0;
+      background: #f2f9ff;
       font-weight: bold;
-      border-right: 1px solid #e8e8e8;
       display: flex;
     }
     .table_header_item {
@@ -336,6 +354,7 @@ export default {
       background: #ffffff;
       overflow-y: auto;
       border-right: 1px solid #e8e8e8;
+      max-height: calc(100vh - 400px);
       //   height: 70vh;
     }
     .table_content_item {

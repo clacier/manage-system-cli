@@ -2,15 +2,39 @@
   <div class="modal_box">
     <div v-if="visible" class="modal_mask" @click="handleCancel"></div>
     <transition name="slide-fade">
-      <div v-if="visible">
+      <div v-if="visible && isReload">
         <div
           class="modal_content"
-          :style="`width:${width}px;
-        margin-left:-${width/2}px;
-        left:${left}px;top:${top}px`"
+          :style="
+            `width:${width}px;
+        margin-left:-${width / 2}px;
+        left:${left}px;top:${top}px`
+          "
         >
           <div class="modal_header">
-            <div class="modal_title" @mousedown="handleDarg">{{title}}</div>
+            <div class="modal_title" @mousedown="handleDarg">{{ title }}</div>
+            <a-icon type="close" @click="handleCancel" class="cursor" />
+          </div>
+          <div class="modal_body">
+            <slot></slot>
+          </div>
+          <div class="modal_bottom" v-if="!hideFooter">
+            <a-button type="primary" @click="handleOk" style="margin-right:10px">确认</a-button>
+            <a-button @click="handleCancel">取消</a-button>
+          </div>
+        </div>
+      </div>
+      <div v-show="visible && !isReload">
+        <div
+          class="modal_content"
+          :style="
+            `width:${width}px;
+        margin-left:-${width / 2}px;
+        left:${left}px;top:${top}px`
+          "
+        >
+          <div class="modal_header">
+            <div class="modal_title" @mousedown="handleDarg">{{ title }}</div>
             <a-icon type="close" @click="handleCancel" class="cursor" />
           </div>
           <div class="modal_body">
@@ -30,38 +54,42 @@
 export default {
   model: {
     prop: 'visible', //这个字段，是指父组件设置 v-model 时，将变量值传给子组件的 msg
-    event: 'visible-event' //这个字段，是指父组件监听 parent-event 事件
+    event: 'visible-event', //这个字段，是指父组件监听 parent-event 事件
   },
   props: {
     width: {
       default: 520,
-      required: false
+      required: false,
+    },
+    isReload: {
+      default: false,
+      required: false,
     },
     visible: {
       default: false,
-      required: false
+      required: false,
     },
     hideFooter: {
       type: [Boolean],
       default: false,
-      required: false
+      required: false,
     },
     title: {
       type: [String],
       default: true,
-      required: false
+      required: false,
     },
     logo: {
       type: String,
       default: '',
-      required: false
-    }
+      required: false,
+    },
   },
   data() {
     return {
       opacity: 0,
       left: '',
-      top: ''
+      top: '',
     }
   },
   methods: {
@@ -75,13 +103,13 @@ export default {
       let left = window.screen.availWidth / 2
       this.isDrag = true
       // return false
-      ;(document.onmousemove = e => {
+      ;(document.onmousemove = (e) => {
         if (this.isDrag) {
           this.left = startLeft + e.pageX - startX + marL
           this.top = startTop + e.pageY - startY
         }
       }),
-        (document.onmouseup = e => {
+        (document.onmouseup = (e) => {
           this.isDrag = false
           document.onmousemove = null
           document.onmouseup = null
@@ -95,23 +123,23 @@ export default {
       this.top = ''
       this.$emit('visible-event')
       this.$emit('cancel')
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style lang="less" scoped>
 .slide-fade-enter-active {
-  transition: all 0.5s ease;
+  //   transition: all 0.s cubic-bezier(1, 0.5, 0.8, 0.8);
 }
 .slide-fade-leave-active {
-  transition: all 0.5s cubic-bezier(1, 0.5, 0.8, 1);
+  //   transition: all 0.2s cubic-bezier(1, 0.5, 0.8, 0.8);
 }
 .slide-fade-enter, .slide-fade-leave-to
 /* .slide-fade-leave-active for below version 2.1.8 */ {
   // transform: translateX(500px);
   z-index: 99;
-  transform: scale(0);
+  //   transform: scale(0);
   opacity: 0;
 }
 .modal_box {
@@ -130,16 +158,18 @@ export default {
     width: 100%;
     padding: 15px;
     display: flex;
+    background: #1890ff;
+    color: #ffffff;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #e8e8e8;
   }
   .modal_content {
     position: fixed;
     left: 50%;
     z-index: 200;
     margin-left: -260px;
-    top: 10vh;
+    top: 50%;
+    transform: translateY(-50%);
 
     // transition-duration: 1s;
     background: #ffffff;
@@ -150,7 +180,9 @@ export default {
     overflow: auto;
   }
   .modal_title {
-    width: 90%;
+    width: 100%;
+
+    text-align: center;
     cursor: move;
   }
   .modal_bottom {
