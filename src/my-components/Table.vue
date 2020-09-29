@@ -27,19 +27,13 @@
           v-if="virtualScroll"
           class="table_content"
           @scroll="hanldeScroll"
-          :style="
-            `height:${viewH}px;overflow-y:auto;position:${dataList.length == 0 ? 'relative' : ''}; min-height:${
-              dataList.length == 0 ? '300px' : ''
-            }`
-          "
+          :style="`height:${viewH}px;overflow-y:auto;position:${dataList.length == 0 ? 'relative' : ''}; min-height:${
+            dataList.length == 0 ? '300px' : ''
+          }`"
         >
           <div :style="{ height: scorllH }" ref="table_content">
             <div :style="`transform:translateY(${offSetY}px); `">
-              <div
-                class="table_conten_item_box"
-                v-for="(item, index) in list"
-                :style="{ height: itemH + 'px' }"
-              >
+              <div class="table_conten_item_box" v-for="(item, index) in list" :style="{ height: itemH + 'px' }">
                 <div
                   v-if="showCheck"
                   class="table_content_item"
@@ -47,15 +41,12 @@
                 >
                   <input @change="checkChange(item)" :checked="item.isCheck" type="checkbox" />
                 </div>
-                <div
-                  v-for="(item2, key) in cloums"
-                  :style="`width:${item2.width}px;text-align:${item2.align}`"
-                >
+                <div v-for="(item2, key) in cloums" :style="`width:${item2.width}px;text-align:${item2.align}`">
                   <div
                     class="table_content_item"
-                    :style="
-                      `justify-content:${item2.align};align-items:${item2.align};border:${showBoder ? '' : 'none'}`
-                    "
+                    :style="`justify-content:${item2.align};align-items:${item2.align};border:${
+                      showBoder ? '' : 'none'
+                    }`"
                   >
                     <slot v-if="item2.scopedSlots" :name="item2.key" :item="item" :index="index"></slot>
                     <div v-else>{{ item[item2.key] ? item[item2.key] : '-' }}</div>
@@ -73,18 +64,12 @@
           class="table_content"
           v-else
           ref="table_content"
-          :style="
-            `height:${scroll.y ? scroll.y + 'px' : 'auto'}; position:${
-              dataList.length == 0 ? 'relative' : ''
-            }; min-height:${dataList.length == 0 ? '300px' : ''}`
-          "
+          :style="`height:${scroll.y ? scroll.y + 'px' : 'auto'}; position:${
+            dataList.length == 0 ? 'relative' : ''
+          }; min-height:${dataList.length == 0 ? '300px' : ''}`"
         >
           <div>
-            <div
-              class="table_conten_item_box"
-              :style="{ height: itemH + 'px' }"
-              v-for="(item, index) in list"
-            >
+            <div class="table_conten_item_box" :style="{ height: itemH + 'px' }" v-for="(item, index) in list">
               <div
                 v-if="showCheck"
                 class="table_content_item"
@@ -92,14 +77,8 @@
               >
                 <a-checkbox @change="checkChange(item)" :checked="item.isCheck"></a-checkbox>
               </div>
-              <div
-                v-for="(item2, key) in cloums"
-                :style="`width:${item2.width}px;text-align:${item2.align}`"
-              >
-                <div
-                  class="table_content_item"
-                  :style="`justify-content:${item2.align};align-items:${item2.align}`"
-                >
+              <div v-for="(item2, key) in cloums" :style="`width:${item2.width}px;text-align:${item2.align}`">
+                <div class="table_content_item" :style="`justify-content:${item2.align};align-items:${item2.align}`">
                   <slot v-if="item2.scopedSlots" :name="item2.key" :item="item"></slot>
                   <div v-else>{{ item[item2.key] || item[item2.key] === 0 ? item[item2.key] : '-' }}</div>
                 </div>
@@ -221,7 +200,7 @@ export default {
   methods: {
     hanldeScroll(e) {
       // console.log(e.target.scrollTop) // 滚动条高度
-      this.offSetY = e.target.scrollTop - (e.target.scrollTop % this.itemH) //设置动态偏移量模拟滚动
+      this.offSetY = e.target.scrollTop //设置动态偏移量模拟滚动
       this.list = this.dataList.slice(
         Math.floor(e.target.scrollTop / this.itemH),
         Math.floor(e.target.scrollTop / this.itemH) + this.itemNum
