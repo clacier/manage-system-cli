@@ -26,6 +26,7 @@
         <div
           v-if="virtualScroll"
           class="table_content"
+          ref="table_content"
           @scroll="hanldeScroll"
           :style="`height:${viewH}px;overflow-y:auto;position:${dataList.length == 0 ? 'relative' : ''}; min-height:${
             dataList.length == 0 ? '300px' : ''
@@ -39,7 +40,7 @@
                   class="table_content_item"
                   :style="`width:50px;align-items:center;justify-content:center;border:${showBoder ? '' : 'none'}`"
                 >
-                  <input @change="checkChange(item)" :checked="item.isCheck" type="checkbox" />
+                  <a-checkbox @change="checkChange(item)" :checked="item.isCheck"></a-checkbox>
                 </div>
                 <div v-for="(item2, key) in cloums" :style="`width:${item2.width}px;text-align:${item2.align}`">
                   <div
@@ -104,6 +105,8 @@ export default {
       // 重新计算
       if (this.$props.virtualScroll) {
         // 计算总高度
+        let table_content = this.$refs.table_content
+        table_content.scrollTop = 0
         this.scorllH = this.itemH * this.dataList.length + 'px'
         // 计算可视区域高度
         this.viewH = this.itemH * this.$props.itemNum
@@ -114,8 +117,14 @@ export default {
     },
   },
   props: {
-    itemNum: Number, //展示个数
-    itemH: Number, // 表格单行高度
+    itemNum: {
+      type: Number,
+      default: 5,
+    }, //展示个数
+    itemH: {
+      type: Number,
+      default: 40,
+    }, // 表格单行高度
     dataList: {
       type: Array,
       default: () => [],
@@ -126,6 +135,7 @@ export default {
     },
     cloums: {
       type: Array,
+      required: true,
       default: () => [],
     },
     scroll: {
@@ -143,7 +153,7 @@ export default {
     },
     showBoder: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     rowCheck: {
       type: Boolean,
@@ -173,15 +183,16 @@ export default {
     }
   },
   created() {
-    if (this.$props.rowCheck) {
-      this.showCheck = true
-      this.$props.dataList.isCheck = false
-      // this.$props.dataList.forEarch((item.isCheck = false))
-    }
-    console.log(this.dataList)
     this.cloums.forEach((item) => {
       this.tableW += parseInt(item.width)
     })
+    if (this.$props.rowCheck) {
+      this.showCheck = true
+      this.$props.dataList.isCheck = false
+      this.tableW += 50
+      // this.$props.dataList.forEarch((item.isCheck = false))
+    }
+    console.log(this.dataList)
     if (this.$props.virtualScroll) {
       // 计算总高度
       this.scorllH = this.itemH * this.dataList.length + 'px'
@@ -195,6 +206,7 @@ export default {
   },
   mounted() {
     const table_content = this.$refs.table_content
+    console.log(this.tableW, table_content.clientWidth)
     this.scrollWidth = this.tableW - table_content.clientWidth
   },
   methods: {
@@ -253,7 +265,7 @@ export default {
           document.body.style.cursor = 'col-resize'
           // this.xian_left = Math.round(e.pageX )
           // 偏移量
-          const l = e.pageX - startX
+          const l = parseInt(e.pageX - startX)
           if (width + l >= 36) {
             this.tableW = tableW + l
             this.cloums[index].width = width + l
@@ -267,7 +279,7 @@ export default {
       window.onmouseup = (e) => {
         // 鼠标松开
         if (this.isDrag) {
-          const l = e.pageX - startX
+          const l = parseInt(e.pageX - startX)
           if (width + l >= 36) {
             this.tableW = tableW + l
             this.cloums[index].width = width + l

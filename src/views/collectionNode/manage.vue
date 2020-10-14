@@ -12,9 +12,12 @@
         <span>新增站点</span>
       </div>
     </div>
-    <VirtualScroll :itemNum="10" :lineItemNum="3" :itemH="40" v-model="list3" :sourceData="list2">
+    <VirtualScroll :itemNum="5" :lineItemNum="4" :itemH="55" v-model="list3" :sourceData="list2">
       <div class="flex_box3">
-        <div v-for="item in list3" style="width: 30%; height: 40px; color: #ffffff; background: red">
+        <div
+          v-for="item in list3"
+          style="width: 20%; height: 40px; margin: 0 1%; margin-top: 15px; color: #ffffff; background: red"
+        >
           {{ item.name }}
         </div>
       </div>
@@ -38,47 +41,19 @@
         </a-form-item>
       </a-form>
     </dragModal>
-    <div class="list">
-      <div class="list_item" v-for="item in list" :key="item.id">
-        <div class="left">
-          <div class="font_bold">{{ item.siteName }}</div>
-          <div>
-            编号：
-            <span :title="item.siteNo">{{ item.siteNo }}</span>
-          </div>
-          <div>
-            token：
-            <span :title="item.siteToken">{{ item.siteToken }}</span>
-          </div>
-          <div>
-            备注：
-            <span :title="item.siteName">{{ item.siteName }}</span>
-          </div>
-          <div>
-            状态：
-            <span>{{ item.activeStatus == 1 ? '启用' : '关闭' }}</span>
-          </div>
-        </div>
-
-        <div class="right">
-          <div>
-            <a-icon type="delete" @click="handleDelete(item.siteId)" />
-          </div>
-          <div>
-            <a-icon type="edit" @click="handleEdit(item)" />
-          </div>
-          <!-- <div>
-            <a-icon type="disconnect" />
-          </div>-->
-        </div>
-      </div>
-    </div>
+    <Table
+      :dataList="list2"
+      :cloums="cloums"
+      :widthDrag="true"
+      :virtualScroll="true"
+      :itemNum="5"
+      :itemH="30"
+      :rowCheck="true"
+    ></Table>
     <div class="pagination_box" v-if="list.length > 0">
       <a-pagination @change="onShowSizeChange" :pageSize="pageSize" v-model="page" :total="total" show-less-items />
       <span style="margin-left: 10px">共{{ Math.ceil(total / pageSize) }}页</span>
     </div>
-
-    <div v-if="list.length == 0 && !$store.state.loading" class="no_data">暂无数据~</div>
   </div>
 </template>
 
@@ -93,11 +68,11 @@ const formTailLayout = {
 }
 import { getList, add, edit, deleteNode } from '@/api/collectionNode/manage'
 import { message, Modal } from 'ant-design-vue'
-import { Modal as dragModal, VirtualScroll } from '@/my-components'
+import { Modal as dragModal, VirtualScroll, Table } from '@/my-components'
 
 export default {
   name: 'TableListWrapper',
-  components: { dragModal, VirtualScroll },
+  components: { dragModal, VirtualScroll, Table },
   data() {
     return {
       form: this.$form.createForm(this),
@@ -110,6 +85,20 @@ export default {
           key: '',
           type: '',
           required: '',
+        },
+      ],
+      cloums: [
+        {
+          title: 'Mi',
+          width: 500,
+          key: 'name',
+          align: 'center',
+        },
+        {
+          title: 'Md',
+          width: 200,
+          key: 'name',
+          align: 'center',
         },
       ],
       total: 0,
@@ -130,9 +119,9 @@ export default {
     }
   },
   created() {
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < 10000; i++) {
       this.list2.push({
-        name: `name${i}`,
+        name: `name${i + 1}`,
       })
     }
     this.getList()
@@ -140,6 +129,8 @@ export default {
   mounted() {},
   methods: {
     handleAdd() {
+      this.list2 = this.list2.slice(0, 500)
+      return false
       this.form.resetFields()
       this.nodeInfo = ''
       this.type = 1
