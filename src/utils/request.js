@@ -71,10 +71,11 @@ request.interceptors.response.use(response => {
   store.commit('set_loading', false)
   console.log(store)
   if (response.data.code === 2000 || response.data.code === 200) {
+    return response.data
   } else if (response.data.code != 2001) {
     message.error(response.data.msg)
+    return false
   }
-  return response.data
 }, errorHandler)
 
 const installer = {

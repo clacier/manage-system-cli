@@ -1,25 +1,23 @@
 <template>
   <div class="modal_box">
-    <div v-if="visible" class="modal_mask" @click="handleCancel"></div>
+    <div v-if="visible" class="modal_mask"></div>
     <transition name="slide-fade">
       <div v-if="visible && isReload">
         <div
           class="modal_content"
-          :style="
-            `width:${width}px;
+          :style="`width:${width}px;
         margin-left:-${width / 2}px;
-        left:${left}px;top:${top}px`
-          "
+        left:${left}px;top:${top}px`"
         >
-          <div class="modal_header">
-            <div class="modal_title" @mousedown="handleDarg">{{ title }}</div>
+          <div class="modal_header" @mousedown="handleDarg">
+            <div class="modal_title">{{ title }}</div>
             <a-icon type="close" @click="handleCancel" class="cursor" />
           </div>
           <div class="modal_body">
             <slot></slot>
           </div>
           <div class="modal_bottom" v-if="!hideFooter">
-            <a-button type="primary" @click="handleOk" style="margin-right:10px">确认</a-button>
+            <a-button type="primary" @click="handleOk" style="margin-right: 10px">确认</a-button>
             <a-button @click="handleCancel">取消</a-button>
           </div>
         </div>
@@ -27,11 +25,9 @@
       <div v-show="visible && !isReload">
         <div
           class="modal_content"
-          :style="
-            `width:${width}px;
+          :style="`width:${width}px;
         margin-left:-${width / 2}px;
-        left:${left}px;top:${top}px`
-          "
+        left:${left}px;top:${top}px`"
         >
           <div class="modal_header">
             <div class="modal_title" @mousedown="handleDarg">{{ title }}</div>
@@ -40,8 +36,9 @@
           <div class="modal_body">
             <slot></slot>
           </div>
+
           <div class="modal_bottom" v-if="!hideFooter">
-            <a-button type="primary" @click="handleOk" style="margin-right:10px">确认</a-button>
+            <a-button type="primary" @click="handleOk" style="margin-right: 10px">确认</a-button>
             <a-button @click="handleCancel">取消</a-button>
           </div>
         </div>
@@ -52,6 +49,7 @@
 
 <script>
 export default {
+  name: 'Modal',
   model: {
     prop: 'visible', //这个字段，是指父组件设置 v-model 时，将变量值传给子组件的 msg
     event: 'visible-event', //这个字段，是指父组件监听 parent-event 事件
@@ -94,7 +92,6 @@ export default {
   },
   methods: {
     handleDarg(e) {
-      console.log(e)
       let startX = e.pageX
       let startLeft = e.target.offsetParent.offsetLeft
       let startTop = e.target.offsetParent.offsetTop
@@ -108,6 +105,7 @@ export default {
           this.left = startLeft + e.pageX - startX + marL
           this.top = startTop + e.pageY - startY
         }
+       
       }),
         (document.onmouseup = (e) => {
           this.isDrag = false

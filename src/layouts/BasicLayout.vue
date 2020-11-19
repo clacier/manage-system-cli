@@ -23,6 +23,7 @@
 <script>
 import MultiTab from '@/components/MultiTab'
 import { SettingDrawer } from '@ant-design-vue/pro-layout'
+import defaultSettings from '@/config/defaultSettings'
 // import SettingDrawer from '@/components/SettingDrawer'
 import { i18nRender } from '@/locales'
 import { mapState } from 'vuex'
@@ -46,27 +47,28 @@ export default {
       menus: [],
       // 侧栏收起状态
       collapsed: false,
-      settings: {
-        // 布局类型
-        layout: 'sidemenu', // 'sidemenu', 'topmenu'
-        // 定宽: true / 流式: false
-        contentWidth: false,
-        // 主题 'dark' | 'light'
-        theme: 'dark',
-        // 主色调
-        primaryColor: '#1890ff',
-        fixedHeader: false,
-        fixSiderbar: false,
-        colorWeak: false,
+      settings: defaultSettings,
+      //   {
+      //     // 布局类型
+      //     layout: 'sidemenu', // 'sidemenu', 'topmenu'
+      //     // 定宽: true / 流式: false
+      //     contentWidth: false,
+      //     // 主题 'dark' | 'light'
+      //     theme: 'dark',
+      //     // 主色调
+      //     primaryColor: '#52C41A',
+      //     fixedHeader: true,
+      //     fixSiderbar: true,
+      //     colorWeak: true,
 
-        hideHintAlert: false,
-        hideCopyButton: false,
-      },
+      //     hideHintAlert: true,
+      //     hideCopyButton: true,
+      //   },
       // 媒体查询
       query: {},
 
       // 是否手机模式
-      isMobile: false,
+      isMobile: true,
     }
   },
   computed: {

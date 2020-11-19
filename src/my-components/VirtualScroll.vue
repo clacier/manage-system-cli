@@ -9,15 +9,14 @@
     </div>
   </div>
 </template>
-
 <script>
 export default {
   components: {},
+  name: 'VirtualScroll',
   watch: {
     sourceData(val) {
       let content = this.$refs.content
       content.scrollTop = 0
-
       this.dataListSource = JSON.parse(JSON.stringify(val || []))
       this.scorllH = (this.itemH * this.dataListSource.length) / this.$props.lineItemNum + 'px'
       // 计算可视区域高度

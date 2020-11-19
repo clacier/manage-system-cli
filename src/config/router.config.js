@@ -10,45 +10,36 @@ export const asyncRouterMap = [
     name: 'index',
     component: BasicLayout,
     meta: {
-      title: '数据采集',
+      title: '脚手架',
       hiddenHeaderContent: false
     },
-    redirect: '/collectionNode',
+    redirect: '/Example',
     children: [
       {
-        path: '/collectionNode',
-        name: 'collectionNode',
+        path: '/Example',
+        name: 'Example',
         component: PageView,
-        redirect: '/collectionNode/manage',
+        redirect: '/Example/manage',
         meta: {
-          title: '采集点',
+          title: '示例',
           icon: 'check-circle-o'
         },
         children: [
           {
-            path: '/collectionNode/manage',
-            name: 'collectionNodeManage',
-            component: () => import('@/views/collectionNode/manage'),
+            path: '/Example/manage',
+            name: 'Example',
+            component: () => import('@/views/Example/manage'),
             meta: {
-              title: '站点管理',
+              title: '示例',
               keepAlive: false
             }
           },
           {
-            path: '/collectionNode/taskManage',
-            name: 'collectionNodeTaskManage',
-            component: () => import('@/views/collectionNode/taskManage'),
+            path: '/tablePage',
+            name: 'tablePage',
+            component: () => import('@/views/tablePage'),
             meta: {
-              title: '站点任务',
-              keepAlive: false
-            }
-          },
-          {
-            path: '/collectionNode/register',
-            name: 'collectionNodeRegister',
-            component: () => import('@/views/collectionNode/create'),
-            meta: {
-              title: '站点注册',
+              title: '配置化表格页示例',
               keepAlive: false
             }
           }

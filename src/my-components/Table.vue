@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 <template>
   <div class="table">
     <div v-if="renderA"></div>
@@ -42,14 +43,18 @@
                 >
                   <a-checkbox @change="checkChange(item)" :checked="item.isCheck"></a-checkbox>
                 </div>
-                <div v-for="(item2, key) in cloums" :style="`width:${item2.width}px;text-align:${item2.align}`">
+                <div v-for="(item2, key) in cloums" :style="`width:${item2.width}px;text-align:center`">
                   <div
                     class="table_content_item"
-                    :style="`justify-content:${item2.align};align-items:${item2.align};border:${
-                      showBoder ? '' : 'none'
-                    }`"
+                    :style="`justify-content:${item2.align};align-items:center;border:${showBoder ? '' : 'none'}`"
                   >
-                    <slot v-if="item2.scopedSlots" :name="item2.key" :item="item" :index="index"></slot>
+                    <slot
+                      v-if="item2.scopedSlots"
+                      :name="item2.key"
+                      :cloumsItem="item2"
+                      :item="item"
+                      :index="index"
+                    ></slot>
                     <div v-else>{{ item[item2.key] ? item[item2.key] : '-' }}</div>
                   </div>
                 </div>
@@ -70,7 +75,12 @@
           }; min-height:${dataList.length == 0 ? '300px' : ''}`"
         >
           <div>
-            <div class="table_conten_item_box" :style="{ height: itemH + 'px' }" v-for="(item, index) in list">
+            <div
+              class="table_conten_item_box"
+              :key="index + 'a'"
+              :style="{ height: itemH + 'px' }"
+              v-for="(item, index) in list"
+            >
               <div
                 v-if="showCheck"
                 class="table_content_item"
@@ -78,15 +88,14 @@
               >
                 <a-checkbox @change="checkChange(item)" :checked="item.isCheck"></a-checkbox>
               </div>
-              <div v-for="(item2, key) in cloums" :style="`width:${item2.width}px;text-align:${item2.align}`">
-                <div class="table_content_item" :style="`justify-content:${item2.align};align-items:${item2.align}`">
-                  <slot v-if="item2.scopedSlots" :name="item2.key" :item="item"></slot>
+              <div v-for="item2 in cloums" :key="item2.key" :style="`width:${item2.width}px;text-align:${item2.align}`">
+                <div class="table_content_item" :style="`justify-content:${item2.align};align-items:center`">
+                  <slot v-if="item2.scopedSlots" :name="item2.key" :cloumsItem="item2" :item="item"></slot>
                   <div v-else>{{ item[item2.key] || item[item2.key] === 0 ? item[item2.key] : '-' }}</div>
                 </div>
               </div>
             </div>
           </div>
-
           <div class="no_data" v-if="dataList.length == 0">
             <a-empty description=" 暂无数据" />
           </div>
@@ -98,14 +107,14 @@
 
 <script>
 export default {
-  title: 'Table',
+  name: 'Table',
   watch: {
     dataList(val) {
       this.list = this.$props.dataList
       // 重新计算
       if (this.$props.virtualScroll) {
         // 计算总高度
-        let table_content = this.$refs.table_content
+        const table_content = this.$refs.table_content
         table_content.scrollTop = 0
         this.scorllH = this.itemH * this.dataList.length + 'px'
         // 计算可视区域高度
@@ -120,7 +129,7 @@ export default {
     itemNum: {
       type: Number,
       default: 5,
-    }, //展示个数
+    }, // 展示个数
     itemH: {
       type: Number,
       default: 40,
@@ -142,7 +151,7 @@ export default {
       type: Object,
       default: () => {
         return {
-          y: Number,
+          y: screen.availHeight-500 ,
           x: Number,
         }
       },
@@ -186,6 +195,7 @@ export default {
     this.cloums.forEach((item) => {
       this.tableW += parseInt(item.width)
     })
+    console.log(this.scroll)
     if (this.$props.rowCheck) {
       this.showCheck = true
       this.$props.dataList.isCheck = false
@@ -212,7 +222,7 @@ export default {
   methods: {
     hanldeScroll(e) {
       // console.log(e.target.scrollTop) // 滚动条高度
-      this.offSetY = e.target.scrollTop //设置动态偏移量模拟滚动
+      this.offSetY = e.target.scrollTop // 设置动态偏移量模拟滚动
       this.list = this.dataList.slice(
         Math.floor(e.target.scrollTop / this.itemH),
         Math.floor(e.target.scrollTop / this.itemH) + this.itemNum
@@ -265,14 +275,13 @@ export default {
           document.body.style.cursor = 'col-resize'
           // this.xian_left = Math.round(e.pageX )
           // 偏移量
-          const l = parseInt(e.pageX - startX)
+          const l = e.pageX - startX
           if (width + l >= 36) {
             this.tableW = tableW + l
             this.cloums[index].width = width + l
             this.xian_left = e.pageX
           }
           // document.body.style.cursor = 'col-resize' //鼠标样式
-
           // parentNode.style.width = width + l + 'px' //td 改变宽度
         }
       }
@@ -345,7 +354,7 @@ export default {
       background: #ffffff;
       overflow-y: auto;
       border-right: 1px solid #e8e8e8;
-      max-height: calc(100vh - 400px);
+      //   max-height: calc(100vh - 400px);
       //   height: 70vh;
     }
     .table_content_item {
