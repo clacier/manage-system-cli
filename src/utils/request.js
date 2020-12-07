@@ -9,12 +9,10 @@ message.config({
   duration: 3,
   maxCount: 3
 })
-let baseURL = 'http://192.168.0.134:8000/api/'
-console.log(baseURL)
 // 创建 axios 实例
 const request = axios.create({
   // API 请求的默认前缀
-  baseURL: baseURL,
+  baseURL: window.BASE_URL,
 
   timeout: 6000 // 请求超时时间
 })
@@ -56,12 +54,16 @@ const errorHandler = error => {
 
 // request interceptor
 request.interceptors.request.use(config => {
-  //   store.commit('set_loading', true)
-  const token = storage.get(ACCESS_TOKEN)
+  if (!config.hideLoading) {
+    store.commit('set_loading', true) // 请求加载框
+  }
+
+  config.baseURL = window.BASE_URL
+  const token = '11d9e109e02b41a881f578145d552724' // storage.get(ACCESS_TOKEN)
   // 如果 token 存在
   // 让每个请求携带自定义 token 请根据实际情况自行修改
   if (token) {
-    config.headers['Access-Token'] = token
+    config.headers['token'] = token
   }
   return config
 }, errorHandler)

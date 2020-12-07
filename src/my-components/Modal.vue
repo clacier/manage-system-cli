@@ -5,13 +5,15 @@
       <div v-if="visible && isReload">
         <div
           class="modal_content"
-          :style="`width:${width}px;
+          :style="
+            `width:${width}px;
         margin-left:-${width / 2}px;
-        left:${left}px;top:${top}px`"
+        left:${left}px;top:${top}px`
+          "
         >
           <div class="modal_header" @mousedown="handleDarg">
             <div class="modal_title">{{ title }}</div>
-            <a-icon type="close" @click="handleCancel" class="cursor" />
+            <a-icon type="close" @click="handleCancel" id="close" class="cursor" />
           </div>
           <div class="modal_body">
             <slot></slot>
@@ -25,13 +27,15 @@
       <div v-show="visible && !isReload">
         <div
           class="modal_content"
-          :style="`width:${width}px;
+          :style="
+            `width:${width}px;
         margin-left:-${width / 2}px;
-        left:${left}px;top:${top}px`"
+        left:${left}px;top:${top}px`
+          "
         >
-          <div class="modal_header">
-            <div class="modal_title" @mousedown="handleDarg">{{ title }}</div>
-            <a-icon type="close" @click="handleCancel" class="cursor" />
+          <div class="modal_header" @mousedown="handleDarg">
+            <div class="modal_title">{{ title }}</div>
+            <a-icon type="close" @click="handleCancel" id="close" class="cursor" />
           </div>
           <div class="modal_body">
             <slot></slot>
@@ -52,46 +56,49 @@ export default {
   name: 'Modal',
   model: {
     prop: 'visible', //这个字段，是指父组件设置 v-model 时，将变量值传给子组件的 msg
-    event: 'visible-event', //这个字段，是指父组件监听 parent-event 事件
+    event: 'visible-event' //这个字段，是指父组件监听 parent-event 事件
   },
   props: {
     width: {
       default: 520,
-      required: false,
+      required: false
     },
     isReload: {
       default: false,
-      required: false,
+      required: false
     },
     visible: {
       default: false,
-      required: false,
+      required: false
     },
     hideFooter: {
       type: [Boolean],
       default: false,
-      required: false,
+      required: false
     },
     title: {
       type: [String],
       default: true,
-      required: false,
+      required: false
     },
     logo: {
       type: String,
       default: '',
-      required: false,
-    },
+      required: false
+    }
   },
   data() {
     return {
       opacity: 0,
       left: '',
-      top: '',
+      top: ''
     }
   },
   methods: {
     handleDarg(e) {
+      if (e.target.nodeName === 'path' || e.target.nodeName === 'svg') {
+        return
+      }
       let startX = e.pageX
       let startLeft = e.target.offsetParent.offsetLeft
       let startTop = e.target.offsetParent.offsetTop
@@ -100,14 +107,13 @@ export default {
       let left = window.screen.availWidth / 2
       this.isDrag = true
       // return false
-      ;(document.onmousemove = (e) => {
+      ;(document.onmousemove = e => {
         if (this.isDrag) {
           this.left = startLeft + e.pageX - startX + marL
           this.top = startTop + e.pageY - startY
         }
-       
       }),
-        (document.onmouseup = (e) => {
+        (document.onmouseup = e => {
           this.isDrag = false
           document.onmousemove = null
           document.onmouseup = null
@@ -121,8 +127,8 @@ export default {
       this.top = ''
       this.$emit('visible-event')
       this.$emit('cancel')
-    },
-  },
+    }
+  }
 }
 </script>
 

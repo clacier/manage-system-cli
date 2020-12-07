@@ -1,6 +1,6 @@
 <template>
   <pro-layout
-    title="智能物流"
+    title="脚手架"
     :menus="menus"
     :collapsed="collapsed"
     :mediaQuery="query"
@@ -39,7 +39,7 @@ export default {
     SettingDrawer,
     RightContent,
     GlobalFooter,
-    MultiTab,
+    MultiTab
   },
   data() {
     return {
@@ -68,18 +68,18 @@ export default {
       query: {},
 
       // 是否手机模式
-      isMobile: true,
+      isMobile: true
     }
   },
   computed: {
     ...mapState({
       // 动态主路由
-      mainMenu: (state) => state.permission.addRouters,
-    }),
+      mainMenu: state => state.permission.addRouters
+    })
   },
   created() {
-    this.menus = asyncRouterMap.find((item) => item.path === '/').children
-    const routes = this.mainMenu.find((item) => item.path === '/')
+    this.menus = asyncRouterMap.find(item => item.path === '/').children
+    const routes = this.mainMenu.find(item => item.path === '/')
     // this.menus = (routes && routes.children) || []
     this.collapsed = !this.sidebarOpened
     // 处理侧栏收起状态
@@ -133,13 +133,13 @@ export default {
             this.settings.fixSiderbar = false
             this.settings.contentWidth = true
           }
-          break
+          break;
       }
     },
     logoRender() {
       return <LogoSvg />
-    },
-  },
+    }
+  }
 }
 </script>
 

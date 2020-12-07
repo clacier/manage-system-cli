@@ -28,7 +28,7 @@ export default {
   //   主题 'dark' | 'light'
   theme: 'dark',
   title: '脚手架',
-  multiTab: true,
+  multiTab: false,
   pwa: true,
   iconfontUrl: '',
   production: process.env.NODE_ENV === 'production' && process.env.VUE_APP_PREVIEW !== 'true'

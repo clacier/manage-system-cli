@@ -5,6 +5,7 @@ body,
 #app,
 #root {
   height: 100%;
+  word-break: break-all;
 }
 
 .colorWeak {
@@ -18,6 +19,12 @@ body,
 
 .cursor {
   cursor: pointer;
+}
+
+.flex_box_spaceAround {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
 
 .font_ash {
@@ -69,10 +76,18 @@ canvas {
   left: 50%;
   top: 50%;
   font-size: 16px;
-  width: 150px;
+  transform: translate(-50%, -50%);
   color: #999999;
   text-align: center;
-  margin-left: -75px;
+}
+
+.ant-pro-setting-drawer-handle {
+  top: 50px;
+}
+
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 body {
@@ -80,6 +95,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
 
 .font_bold {
   font-weight: bold;

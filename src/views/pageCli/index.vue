@@ -11,8 +11,10 @@ export default {
   data() {
     return {}
   },
-  methods: {},
+  created() {},
+  mounted() {},
+  beforeDestroy() {},
+  methods: {}
 }
 </script>
-<style lang="less" scoped>
-</style>
+<style lang="less" scoped></style>

@@ -1,11 +1,18 @@
 <template>
-  <div class="TablePage">
+  <div class="cardListPage">
     <slot name="pageHeader"> </slot>
     <div class="page_top">
       <div class="search_box">
-        <FormList :columns="searchList" :defautInfo="searchInfo" ref="searchForm" :isSearch="true"> </FormList>
+        <FormList
+          :columns="searchList"
+          :defautInfo="searchInfo"
+          ref="searchForm"
+          :isSearch="true"
+          style="inline-hegiht:normal"
+        >
+        </FormList>
         <slot name="searchContent"> </slot>
-        <a-button type="primary" icon="search" @click="getList">查询</a-button>
+        <a-button type="primary" class="search_btn" icon="search" @click="getList">查询</a-button>
       </div>
       <div>
         <a-button
@@ -36,43 +43,24 @@
     >
       <slot name="detailContent"></slot>
     </Modal>
-    <Table
-      :dataList="list"
-      :columns="columns"
-      :widthDrag="tableConfig.widthDrag"
-      :virtualScroll="tableConfig.virtualScrollOpen"
-      :itemNum="tableConfig.tableItemNum"
-      :itemH="tableConfig.tableItemH"
-      :exportFileName="tableConfig.exportFileName"
-      :showBorder="tableConfig.showBorder"
-      ref="Table"
-    >
-      <template v-for="slotItem in tableSlotList" slot-scope="{ columnsItem, item }" :slot="slotItem.key">
-        <slot :name="slotItem.key" :item="item"> </slot>
-      </template>
+    <div class="cardList">
+      <a-card :title="item.customTitle" class="cardItem" v-for="(item, index) in list" :key="index + 'x'">
+        <template slot="title">
+          <slot name="cardTitle" :item="item" :index="index"></slot>
+        </template>
+        <template slot="extra">
+          <div class="actionList">
+            <div v-for="(actionItem, i) in actionList" :key="i + 'z'">
+              <div class="action_item" v-if="actionItem.showCondition ? actionItem.showCondition(item) : true">
+                <a-icon :type="actionItem.iconType" @click="actionClick(item, actionItem)" />
+              </div>
+            </div>
+          </div>
+        </template>
+        <slot name="cardContent" :item="item" :index="index"></slot>
+      </a-card>
+    </div>
 
-      <template slot="action" slot-scope="{ columnsItem, item }" class="flex_box">
-        <div v-for="(actionItem, index) in columnsItem.actionList" :key="index + 'w'">
-          <div v-if="actionItem.type === 'slot'">
-            <slot
-              v-if="actionItem.showCondition ? actionItem.showCondition(item) : true"
-              :name="actionItem.slotName"
-              :item="item"
-            ></slot>
-          </div>
-          <div v-else>
-            <a-button
-              :type="actionItem.btnType ? actionItem.btnType : 'primary'"
-              style="margin: 0 5px"
-              v-if="actionItem.showCondition ? actionItem.showCondition(item) : true"
-              @click="actionClick(item, actionItem)"
-            >
-              {{ actionItem.text }}
-            </a-button>
-          </div>
-        </div>
-      </template>
-    </Table>
     <div class="pagination_box" v-if="list.length > 0 && showPagination">
       <a-pagination
         show-size-changer
@@ -114,8 +102,6 @@ export default {
       ...this.$props.config,
       form: this.$form.createForm(this),
       list: [],
-      tableSlotList: [],
-      exportFileName: '',
       visible: {
         edit: false,
         detail: false
@@ -139,23 +125,39 @@ export default {
     }
   },
   created() {
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 10; i++) {
       this.list.push({
         name: `name${i + 1}`,
-        num: i + 1,
         type: 1,
         kaiguan: true,
         date: '2017-06-07'
       })
     }
     this.slotFormList = this.formList.filter(item => item.type === 'slot')
-    this.tableSlotList = this.columns.filter(item => item.renderSlot)
+    this.actionList.forEach(item => {
+      switch (item.type) {
+        case 'edit':
+          if (!item.iconType) item.iconType = 'edit'
+          break
+        case 'detail':
+          if (!item.iconType) item.iconType = 'search'
+          break
+        case 'delete':
+          if (!item.iconType) item.iconType = 'delete'
+          break
+
+        default:
+          break
+      }
+    })
   },
   mounted() {
-    // this.getList()
+    this.getList()
   },
   methods: {
     handleAdd() {
+      //   this.list2 = this.list2.slice(0, 500)
+      //   return false
       this.form.resetFields()
       this.detailInfo = ''
       this.type = 1
@@ -168,9 +170,6 @@ export default {
           this.handleAdd()
           break
 
-        case 'export':
-          this.$refs.Table.handleExport()
-          break
         default:
           break
       }
@@ -186,7 +185,7 @@ export default {
       this.actItem = item
       if (actionItem.type === 'delete') {
         Modal.confirm({
-          content: actionItem.promptContent ? actionItem.promptContent : '是否删除该数据？',
+          content: actionItem.promptContent ? actionItem.promptContent : '是否删除该站点？',
           onOk: () => {
             this.deleteOk(item, actionItem.fieldName)
           }
@@ -240,7 +239,6 @@ export default {
           if (this.showPagination) {
             this.total = res.data[this.pageInfo.total]
           }
-
           this.list = this.formatList(res, this.page, this.pageSize) || []
         }
       }
@@ -315,18 +313,47 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.TablePage {
+.cardListPage {
   .page_top {
     width: 100%;
     display: flex;
-    align-items: center;
+    line-height: 40px;
+    align-items: flex-start;
     justify-content: space-between;
-    .action_btn {
+    .add_box {
       cursor: pointer;
       border-radius: 3px;
-      margin: 0 10px;
     }
     margin-bottom: 20px;
+  }
+  .search_btn {
+    position: relative;
+    top: 4px;
+  }
+  .actionList {
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .cardList {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .action_item {
+    border-radius: 5px;
+    margin: 0 6px;
+    font-size: 17px;
+  }
+  .action_item:hover {
+    color: #1890ff;
+  }
+  .cardItem {
+    margin: 10px;
+  }
+  .cardItem:hover .actionList {
+    opacity: 1;
   }
   .flex_box3 {
     display: flex;
@@ -341,7 +368,6 @@ export default {
   }
   .search_box {
     display: flex;
-    align-items: center;
     justify-content: space-between;
   }
   .list {

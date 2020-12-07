@@ -31,6 +31,10 @@ Vue.use(VueAxios)
 Vue.component('pro-layout', ProLayout)
 Vue.component('page-header-wrapper', PageHeaderWrapper)
 window.umi_plugin_ant_themeVar = themePluginConfig.theme
+if (process.env.NODE_ENV === 'development') {
+  window.BASE_URL = 'http://192.168.0.207:9922/' + 'cloudstore-server-dev/api'
+} else {
+}
 new Vue({
   router,
   store,

@@ -1,13 +1,19 @@
 <template>
   <div class="format_container">
     <div class="format_box">
-      <div v-for="item in cloums" class="format_item" :style="`width:${item.width}`">
-        <div>{{ item.name }}:</div>
-        <div v-if="item.renderContent">
-          <div v-html="item.renderContent(data)"></div>
+      <div v-for="item in columns" class="format_item" :style="`width:${item.width};margin:${lineMargin}`">
+        <div :style="item.nameStyle">{{ item.name }}<span v-if="showColon">：</span></div>
+        <div v-if="item.renderSlot">
+          <slot :name="item.key" :data="data"></slot>
         </div>
-        <div v-else :style="`color:${item.color}`">{{ data[item.key] ? data[item.key] : '-' }}</div>
+        <div v-else-if="item.renderHtml">
+          <div v-html="item.renderHtml ? item.renderHtml(data) : ''"></div>
+        </div>
+        <div v-else :style="item.contentStyle">
+          {{ data[item.key] ? data[item.key] : '-' }}
+        </div>
       </div>
+      <slot></slot>
     </div>
   </div>
 </template>
@@ -21,9 +27,17 @@ export default {
       type: Object,
       default: () => {}
     },
-    cloums: {
+    columns: {
       type: Array,
       default: () => []
+    },
+    lineMargin: {
+      type: String,
+      default: '10px 0'
+    },
+    showColon: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {},
@@ -42,7 +56,10 @@ export default {
   }
   .format_item {
     display: flex;
-    margin: 10px 0;
+    flex-wrap: wrap;
+    align-items: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 </style>

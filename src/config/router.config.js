@@ -19,18 +19,18 @@ export const asyncRouterMap = [
         path: '/Example',
         name: 'Example',
         component: PageView,
-        redirect: '/Example/manage',
+        redirect: '/Example/component',
         meta: {
           title: '示例',
-          icon: 'check-circle-o'
+          icon: 'menu'
         },
         children: [
           {
-            path: '/Example/manage',
+            path: '/Example/component',
             name: 'Example',
-            component: () => import('@/views/Example/manage'),
+            component: () => import('@/views/Example/component'),
             meta: {
-              title: '示例',
+              title: '组件示例',
               keepAlive: false
             }
           },
@@ -40,6 +40,15 @@ export const asyncRouterMap = [
             component: () => import('@/views/tablePage'),
             meta: {
               title: '配置化表格页示例',
+              keepAlive: false
+            }
+          },
+          {
+            path: '/cardPage',
+            name: 'cardPage',
+            component: () => import('@/views/cardPage'),
+            meta: {
+              title: '配置化卡片页示例',
               keepAlive: false
             }
           }

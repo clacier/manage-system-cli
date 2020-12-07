@@ -4,15 +4,18 @@
 
 <script>
 export default {
+  name: '',
   components: {},
   watch: {},
   props: {},
   computed: {},
+  created() {},
+  mounted() {},
+  beforeDestroy() {},
   data() {
     return {}
   },
-  methods: {},
+  methods: {}
 }
 </script>
-<style lang="less" scoped>
-</style>
+<style lang="less" scoped></style>
