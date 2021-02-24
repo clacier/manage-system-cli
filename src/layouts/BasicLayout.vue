@@ -133,7 +133,7 @@ export default {
             this.settings.fixSiderbar = false
             this.settings.contentWidth = true
           }
-          break;
+          break
       }
     },
     logoRender() {

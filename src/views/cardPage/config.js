@@ -1,10 +1,5 @@
-import { getList, add, edit, deleteNode } from '@/api/collectionNode/manage'
+import { getList, add, edit, deleteNode } from '@/api/supplier/manage'
 import { message } from 'ant-design-vue'
-const styleConfig = {
-  name1: 'font-size:20px;color:blue',
-  name2: 'font-size:18px;color:red',
-  name3: 'font-size:21px;color:orange'
-}
 const config = {
   pageAction: [
     {
@@ -24,6 +19,16 @@ const config = {
     edit: '修改',
     detail: '详情'
   },
+  // 卡片样式配置
+  cardStyleConfig: {
+    width: '300px',
+    height: '',
+    margin: '',
+    padding: '',
+    color: '',
+    fontSize: '',
+    background: ''
+  },
   // 是否分页
   showPagination: true,
   // 分页字段名
@@ -34,7 +39,7 @@ const config = {
   },
   // 弹窗宽度
   modalWidth: {
-    edit: 600,
+    edit: 800,
     detail: 800
   },
   addBtnText: '新建内容',
@@ -42,12 +47,13 @@ const config = {
   // 页面顶部搜索配置项
   searchList: [
     {
+      label: '供应商名称',
       placeholder: '请输入名称',
       key: 'name', // 字段名称
       type: '' // 表单类型 (text,password,select,date,number,radio,checkbox)
     },
     {
-      placeholder: '请选择日期',
+      placeholder: '请选择创建日期',
       key: 'startDate',
       type: 'date',
       showTime: true
@@ -164,28 +170,22 @@ const config = {
       required: false //是否必填
     }
   ],
-  //   卡片内容
-  cardContent: {
-    // 标题
-    renderTitle: item => {
-      return `<div >${item.supplierName}</div>`
-    }
-  },
   //  卡片操作配置项
   actionList: [
     {
       type: 'edit',
-      fieldName: 'name'
-      //   showCondition: item => {
-      //     return item.name === 'name3'
-      //   }
+      fieldName: 'name',
+      showCondition: item => {
+        return item.name === 'name3'
+      }
     },
 
     {
       type: 'detail'
-      //   showCondition: item => {
-      //     return item.name === 'name2'
-      //   }
+      // showCondition: item => {
+      //   console.log(item.name === 'name2')
+      //   return item.name === 'name2'
+      // }
     },
     {
       type: 'delete',
@@ -194,20 +194,20 @@ const config = {
       //   showCondition: item => {
       //     return item.name === 'name2'
       //   },
-      promptContent: '确定删除该货品？'
+      promptContent: '确定删除该供应商？'
     }
   ],
-  //   新增弹窗中表单的参数(用于二次校验或者需要自定义参数) 使用此函数需要返回重新定义的表单参数，无返回会当做
+  //   新增弹窗中表单的参数(用于二次校验或者需要自定义参数) 使用此函数需要返回重新定义的表单参数，无返回会当做校验不成功
   submitFunc: (values, self) => {
     //values-表单数据   self当前页面本身 可以理解为组件中的this
     let data = values
     console.log(self)
-    // return data
+    return data
   },
-  delOkFunc: (data, self) => {
-    //data 当前操作对象
+  delOkFunc: (item, self) => {
+    //item 当前操作对象
     //用于删除时的二次校验  返回值为true || false
-    console.log(data)
+    console.log(item)
     // return true
   },
   // 查询参数
@@ -217,6 +217,7 @@ const config = {
   },
   //   格式化list
   formatList: (res, currtPage, pageSize) => {
+    //res- 请求列表接口返回值
     return res.data.list || []
   }
 }

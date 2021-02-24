@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <TablePage :config="config" :searchParams="searchParams" ref="tabPage" @openDetail="openDetail">
+    <MultileveTablePage :config="config" :searchParams="searchParams" ref="tabPage" @openDetail="openDetail">
       <!-- 页面头部自定义   -->
       <template slot="pageHeader">
         <a-tabs default-active-key="1" style="width:50%">
@@ -10,12 +10,6 @@
         </a-tabs>
       </template>
       <!-- 表格自定义  -->
-      <template slot="avatar">
-        <img
-          src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1925088662,1336364220&fm=26&gp=0.jpg"
-          style="width:100px "
-        />
-      </template>
       <template slot="selfAction" slot-scope="{ item }">
         <a-button @click="selfActionClick(item)">自定义操作</a-button>
       </template>
@@ -33,17 +27,17 @@
       <div slot="detailContent">
         <FormatRender :data="actItem" :columns="formatColumns"></FormatRender>
       </div>
-    </TablePage>
+    </MultileveTablePage>
   </div>
 </template>
 <script>
-import TablePage from '@/my-components/TablePage'
+import MultileveTablePage from '@/my-components/MultileveTablePage'
 import config from './config'
 import { formartDate } from '@/utils/format'
 import { FormatRender } from '@/my-components'
 export default {
   name: 'TableListWrapper',
-  components: { TablePage, FormatRender },
+  components: { MultileveTablePage, FormatRender },
   data() {
     return {
       config: config,

@@ -37,6 +37,7 @@ const config = {
     edit: 600,
     detail: 500
   },
+  isSearch: false,
   tableConfig: {
     exportFileName: '导出文件',
     checkExport: false,
@@ -124,53 +125,51 @@ const config = {
   ],
   //  表格配置项
   columns: [
+    // {
+    //   title: '序号',
+    //   width: 100,
+    //   sort: true,
+    //   key: 'num',
+    //   align: 'center'
+    // },
     {
-      title: '序号',
-      width: 100,
-      sort: true,
-      key: 'num',
-      align: 'center'
-    },
-    {
-      title: '供应商名称',
-      width: screen.availWidth * 0.08,
-      key: 'supplierName',
-      align: 'center'
+      title: 'Address',
+      children: [
+        {
+          title: 'Street',
+          key: 'name',
+          width: '10%'
+        },
+        {
+          title: 'Block',
+          children: [
+            {
+              title: 'Building',
+              key: 'address',
+              width: '10%'
+            },
+            {
+              title: 'Door No.',
+              dataIndex: 'number',
+              key: 'number',
+              renderSlot: true,
+              width: '10%'
+            }
+          ]
+        }
+      ]
     },
     {
       title: '供应商邮箱',
-      width: screen.availWidth * 0.1,
+      width: '10%',
       key: 'supplierEmail',
-      align: 'center'
-    },
-    {
-      title: '头像',
-      width: screen.availWidth * 0.1,
-      key: 'avatar',
-      renderSlot: true,
-      align: 'center'
-    },
-    {
-      title: '营业执照',
-      width: screen.availWidth * 0.1,
-      key: 'supplierAolicenceImg',
-      renderHtml: item => {
-        return `<img  src=${item.supplierCorporationIdcardFimg}  style='width:100px '/>`
-      },
-      align: 'center'
-    },
-
-    {
-      title: '公司地址',
-      width: 150,
-      key: 'supplierAddr',
       align: 'center'
     },
     // 配置化表格页 操作项 key固定,renderSlot必须设为true
     // 删 改 查 功能由组件自行处理
     {
       title: '操作',
-      width: 200,
+      width: '20%',
       key: 'action',
       renderSlot: true,
       actionList: [

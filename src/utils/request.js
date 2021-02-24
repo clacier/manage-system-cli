@@ -19,34 +19,26 @@ const request = axios.create({
 
 // 异常拦截处理器
 const errorHandler = error => {
+  store.commit('set_loading', false)
+  // 从 localstorage 获取 token
+  if (error.response.status === 403) {
+    notification.error({
+      message: 'Forbidden',
+      description: data.message
+    })
+  }
   if (error.response) {
     const data = error.response.data
 
     notification.error({
-      message: '错误',
+      message: error.msg || '网络异常',
       description: data.error
     })
-    store.commit('set_loading', false)
-    // 从 localstorage 获取 token
-    const token = storage.get(ACCESS_TOKEN)
-    if (error.response.status === 403) {
-      notification.error({
-        message: 'Forbidden',
-        description: data.message
-      })
-    }
     if (error.response.status === 401 && !(data.result && data.result.isLogin)) {
       notification.error({
         message: 'Unauthorized',
         description: 'Authorization verification failed'
       })
-      if (token) {
-        store.dispatch('Logout').then(() => {
-          setTimeout(() => {
-            window.location.reload()
-          }, 1500)
-        })
-      }
     }
   }
   return Promise.reject(error)
@@ -59,7 +51,7 @@ request.interceptors.request.use(config => {
   }
 
   config.baseURL = window.BASE_URL
-  const token = '11d9e109e02b41a881f578145d552724' // storage.get(ACCESS_TOKEN)
+  const token = 'fdf954f1121f43cea60ebbf9aea31281' // storage.get(ACCESS_TOKEN)
   // 如果 token 存在
   // 让每个请求携带自定义 token 请根据实际情况自行修改
   if (token) {
@@ -68,7 +60,7 @@ request.interceptors.request.use(config => {
   return config
 }, errorHandler)
 
-// response interceptor
+// 请求响应处理
 request.interceptors.response.use(response => {
   store.commit('set_loading', false)
   console.log(store)

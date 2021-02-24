@@ -3,9 +3,23 @@
     <slot name="pageHeader"> </slot>
     <div class="page_top">
       <div class="search_box">
-        <FormList :columns="searchList" :defautInfo="searchInfo" ref="searchForm" :isSearch="true"> </FormList>
+        <FormList
+          :columns="searchList"
+          :defautInfo="searchInfo"
+          ref="searchForm"
+          :isSearch="true"
+          style="inline-hegiht:normal"
+        >
+        </FormList>
         <slot name="searchContent"> </slot>
-        <a-button type="primary" icon="search" @click="getList">查询</a-button>
+        <a-button
+          v-if="config.isSearch || config.isSearch === undefined"
+          type="primary"
+          class="search_btn"
+          icon="search"
+          @click="getList"
+          >查询</a-button
+        >
       </div>
       <div>
         <a-button
@@ -23,9 +37,12 @@
       </div>
     </div>
     <Modal v-model="visible.edit" :width="modalWidth.edit" :title="modalTitle" @ok="handleOK">
-      <FormList :columns="formList" :defautInfo="detailInfo" ref="Form">
-        <slot v-for="slotItem in slotFormList" :name="slotItem.slotName" :slot="slotItem.slotName"></slot>
-      </FormList>
+      <div class="edit_modal_content">
+        <slot name="editLeftContent"></slot>
+        <FormList :columns="formList" :defautInfo="detailInfo" ref="Form" style="width:100%">
+          <slot v-for="slotItem in slotFormList" :name="slotItem.slotName" :slot="slotItem.slotName"></slot>
+        </FormList>
+      </div>
     </Modal>
     <Modal
       v-model="visible.detail"
@@ -43,6 +60,7 @@
       :virtualScroll="tableConfig.virtualScrollOpen"
       :itemNum="tableConfig.tableItemNum"
       :itemH="tableConfig.tableItemH"
+      :checkExport="tableConfig.checkExport"
       :exportFileName="tableConfig.exportFileName"
       :showBorder="tableConfig.showBorder"
       ref="Table"
@@ -50,7 +68,6 @@
       <template v-for="slotItem in tableSlotList" slot-scope="{ columnsItem, item }" :slot="slotItem.key">
         <slot :name="slotItem.key" :item="item"> </slot>
       </template>
-
       <template slot="action" slot-scope="{ columnsItem, item }" class="flex_box">
         <div v-for="(actionItem, index) in columnsItem.actionList" :key="index + 'w'">
           <div v-if="actionItem.type === 'slot'">
@@ -139,24 +156,24 @@ export default {
     }
   },
   created() {
-    for (let i = 0; i < 100; i++) {
-      this.list.push({
-        name: `name${i + 1}`,
-        num: i + 1,
-        type: 1,
-        kaiguan: true,
-        date: '2017-06-07'
-      })
-    }
+    // for (let i = 0; i < 100; i++) {
+    //   this.list.push({
+    //     name: `name${i + 1}`,
+    //     num: i + 1,
+    //     type: 1,
+    //     kaiguan: true,
+    //     date: '2017-06-07'
+    //   })
+    // }
     this.slotFormList = this.formList.filter(item => item.type === 'slot')
     this.tableSlotList = this.columns.filter(item => item.renderSlot)
   },
   mounted() {
-    // this.getList()
+    this.getList()
   },
   methods: {
     handleAdd() {
-      this.form.resetFields()
+      this.$refs.Form.form.resetFields()
       this.detailInfo = ''
       this.type = 1
       this.modalTitle = this.modalTitleText.add
@@ -201,9 +218,6 @@ export default {
     handleCloseModal(type) {
       this.visible[type] = false
     },
-    refGetListData() {
-      return this.list
-    },
     handleEdit(item, editFieldName) {
       this.form.resetFields()
       this.detailInfo = item
@@ -240,14 +254,16 @@ export default {
           if (this.showPagination) {
             this.total = res.data[this.pageInfo.total]
           }
-
-          this.list = this.formatList(res, this.page, this.pageSize) || []
+          this.list = this.formatList(res, this.page, this.pageSize, this.$parent) || []
         }
       }
       console.log(res)
     },
-    getActItem() {
+    refGetActItem() {
       return this.actItem
+    },
+    refGetListData() {
+      return this.list
     },
     async add(data) {
       const { add } = this.api
@@ -319,7 +335,7 @@ export default {
   .page_top {
     width: 100%;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     .action_btn {
       cursor: pointer;
@@ -327,6 +343,10 @@ export default {
       margin: 0 10px;
     }
     margin-bottom: 20px;
+  }
+  .edit_modal_content {
+    display: flex;
+    width: 100%;
   }
   .flex_box3 {
     display: flex;

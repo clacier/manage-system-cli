@@ -1,5 +1,5 @@
 <template>
-  <div class="cardListPage">
+  <div class="TablePage">
     <slot name="pageHeader"> </slot>
     <div class="page_top">
       <div class="search_box">
@@ -13,6 +13,7 @@
         </FormList>
         <slot name="searchContent"> </slot>
         <a-button
+          style="margin-left:20px"
           v-if="config.isSearch || config.isSearch === undefined"
           type="primary"
           class="search_btn"
@@ -53,26 +54,42 @@
     >
       <slot name="detailContent"></slot>
     </Modal>
-    <div class="cardList">
-      <a-card class="card_item" v-for="(item, index) in list" :key="index + 'x'" :style="{ ...cardStyleConfig }">
-        <template slot="title">
-          <slot name="cardTitle" :item="item" :index="index"></slot>
-        </template>
-        <template slot="extra">
-          <div class="actionList">
-            <div v-for="(actionItem, i) in actionList" :key="i + 'z'">
-              <div class="action_item" v-if="item[actionItem.type + 'Action']">
-                <a-icon :type="actionItem.iconType" @click="actionClick(item, actionItem)" />
-              </div>
-            </div>
+    <slot name="pageContent"></slot>
+    <MultileveTable
+      :dataList="list"
+      :columns="columns"
+      :widthDrag="tableConfig.widthDrag"
+      :virtualScroll="tableConfig.virtualScrollOpen"
+      :checkExport="tableConfig.checkExport"
+      :exportFileName="tableConfig.exportFileName"
+      :showBorder="tableConfig.showBorder"
+      ref="Table"
+    >
+      <template v-for="slotItem in tableSlotList" slot-scope="{ columnsItem, item }" :slot="slotItem.key">
+        <slot :name="slotItem.key" :item="item"> </slot>
+      </template>
+      <div slot="action" slot-scope="{ columnsItem, item }" class="flex_box">
+        <div v-for="(actionItem, index) in columnsItem.actionList" :key="index + 'w'">
+          <div v-if="actionItem.type === 'slot'">
+            <slot
+              v-if="actionItem.showCondition ? actionItem.showCondition(item) : true"
+              :name="actionItem.slotName"
+              :item="item"
+            ></slot>
           </div>
-        </template>
-        <slot name="cardContent" :item="item" :index="index"></slot>
-      </a-card>
-    </div>
-    <div class="no_data" v-if="list.length == 0 && !$store.state.loding">
-      <a-empty description=" 暂无数据" />
-    </div>
+          <div v-else>
+            <a-button
+              :type="actionItem.btnType ? actionItem.btnType : 'primary'"
+              style="margin: 0 5px"
+              v-if="actionItem.showCondition ? actionItem.showCondition(item) : true"
+              @click="actionClick(item, actionItem)"
+            >
+              {{ actionItem.text }}
+            </a-button>
+          </div>
+        </div>
+      </div>
+    </MultileveTable>
     <div class="pagination_box" v-if="list.length > 0 && showPagination">
       <a-pagination
         show-size-changer
@@ -94,21 +111,11 @@ const formItemLayout = {
   wrapperCol: { span: 18 }
 }
 import { message, Modal } from 'ant-design-vue'
-import { VirtualScroll, FormList } from '@/my-components'
+import { FormList, MultileveTable } from '@/my-components'
 
 export default {
   name: 'TablePage',
-  components: { VirtualScroll, FormList },
-  watch: {
-    list: {
-      handler() {
-        this.formatShowCondition()
-        console.log(this.list)
-      },
-      deep: true
-    }
-  },
-
+  components: { FormList, MultileveTable },
   props: {
     config: {
       type: Object,
@@ -124,6 +131,8 @@ export default {
       ...this.$props.config,
       form: this.$form.createForm(this),
       list: [],
+      tableSlotList: [],
+      exportFileName: '',
       visible: {
         edit: false,
         detail: false
@@ -150,37 +159,71 @@ export default {
     for (let i = 0; i < 10; i++) {
       this.list.push({
         name: `name${i + 1}`,
+        num: i + 1,
         type: 1,
         kaiguan: true,
         date: '2017-06-07'
       })
     }
-    this.slotFormList = this.formList.filter(item => item.type === 'slot')
-    this.actionList.forEach(item => {
-      switch (item.type) {
-        case 'edit':
-          if (!item.iconType) item.iconType = 'edit'
-          break
-        case 'detail':
-          if (!item.iconType) item.iconType = 'search'
-          break
-        case 'delete':
-          if (!item.iconType) item.iconType = 'delete'
-          break
-
-        default:
-          break
+    this.list[1].children = [
+      {
+        key: 11,
+        name: 'John Brown',
+        age: 42,
+        address: 'New York No. 2 Lake Park'
+      },
+      {
+        key: 12,
+        name: 'John Brown jr.',
+        age: 30,
+        address: 'New York No. 3 Lake Park',
+        children: [
+          {
+            key: 121,
+            name: 'Jimmy Brown',
+            age: 16,
+            address: 'New York No. 3 Lake Park'
+          }
+        ]
+      },
+      {
+        key: 13,
+        name: 'Jim Green sr.',
+        age: 72,
+        address: 'London No. 1 Lake Park',
+        children: [
+          {
+            key: 131,
+            name: 'Jim Green',
+            age: 42,
+            address: 'London No. 2 Lake Park',
+            children: [
+              {
+                key: 1311,
+                name: 'Jim Green jr.',
+                age: 25,
+                address: 'London No. 3 Lake Park'
+              },
+              {
+                key: 1312,
+                name: 'Jimmy Green sr.',
+                age: 18,
+                address: 'London No. 4 Lake Park'
+              }
+            ]
+          }
+        ]
       }
-    })
+    ]
+    this.slotFormList = this.formList.filter(item => item.type === 'slot')
+    this.tableSlotList = this.columns.filter(item => item.renderSlot)
   },
   mounted() {
-    this.getList()
+    // this.getList()
   },
   methods: {
     handleAdd() {
-      //   this.list2 = this.list2.slice(0, 500)
-      //   return false
-      this.form.resetFields()
+      this.$refs.Form.form.resetFields()
       this.detailInfo = ''
       this.type = 1
       this.modalTitle = this.modalTitleText.add
@@ -192,20 +235,12 @@ export default {
           this.handleAdd()
           break
 
+        case 'export':
+          this.$refs.Table.handleExport()
+          break
         default:
           break
       }
-    },
-    formatShowCondition() {
-      this.actionList.forEach(actionItem => {
-        this.list.forEach(item => {
-          if (actionItem.showCondition) {
-            item[actionItem.type + 'Action'] = actionItem.showCondition(item)
-          } else {
-            item[actionItem.type + 'Action'] = true
-          }
-        })
-      })
     },
     onShowSizeChange(page, pageSize) {
       console.log(pageSize)
@@ -214,10 +249,11 @@ export default {
       this.getList()
     },
     actionClick(item, actionItem) {
+      console.log(actionItem.type)
       this.actItem = item
       if (actionItem.type === 'delete') {
         Modal.confirm({
-          content: actionItem.promptContent ? actionItem.promptContent : '是否删除该站点？',
+          content: actionItem.promptContent ? actionItem.promptContent : '是否删除该数据？',
           onOk: () => {
             this.deleteOk(item, actionItem.fieldName)
           }
@@ -232,9 +268,6 @@ export default {
     handleCloseModal(type) {
       this.visible[type] = false
     },
-    refGetListData() {
-      return this.list
-    },
     handleEdit(item, editFieldName) {
       this.form.resetFields()
       this.detailInfo = item
@@ -247,9 +280,6 @@ export default {
     },
     async getList() {
       this.searchInfo = this.$refs.searchForm.handleSubmit()
-      if (!this.searchInfo) {
-        return
-      }
       let params = {
         ...this.searchInfo,
         ...this.searchParams
@@ -279,8 +309,11 @@ export default {
       }
       console.log(res)
     },
-    getActItem() {
+    refGetActItem() {
       return this.actItem
+    },
+    refGetListData() {
+      return this.list
     },
     async add(data) {
       const { add } = this.api
@@ -348,16 +381,16 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.cardListPage {
+.TablePage {
   .page_top {
     width: 100%;
     display: flex;
-    line-height: 40px;
     align-items: flex-start;
     justify-content: space-between;
-    .add_box {
+    .action_btn {
       cursor: pointer;
       border-radius: 3px;
+      margin: 0 10px;
     }
     margin-bottom: 20px;
   }
@@ -365,47 +398,6 @@ export default {
     display: flex;
     width: 100%;
   }
-  .search_box {
-    display: flex;
-    justify-content: space-between;
-  }
-  .search_btn {
-    position: relative;
-    top: 4px;
-  }
-  .actionList {
-    display: flex;
-    align-items: center;
-    opacity: 0;
-    cursor: pointer;
-    transition: 0.2s;
-  }
-  .cardList {
-    display: flex;
-    flex-wrap: wrap;
-
-    max-height: calc(100vh - 400px);
-    overflow: auto;
-  }
-  .action_item {
-    border-radius: 5px;
-    margin: 0 6px;
-    font-size: 17px;
-  }
-  .action_item:hover {
-    color: #1890ff;
-  }
-  .card_item {
-    width: auto;
-    margin: 10px;
-  }
-  .card_item:hover .actionList {
-    opacity: 1;
-  }
-  .card_item:hover {
-    box-shadow: 0px 0px 10px #dad8d8;
-  }
-
   .flex_box3 {
     display: flex;
     flex-wrap: wrap;
@@ -417,7 +409,11 @@ export default {
     display: flex;
     align-items: center;
   }
-
+  .search_box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
   .list {
     display: flex;
     margin-top: 10px;

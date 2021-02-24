@@ -1,5 +1,6 @@
 // eslint-disable-next-line
 import { UserLayout, BasicLayout, RouteView, PageView } from '@/layouts'
+import exampleRouter from './example-router'
 // import {
 //   bxAnaalyse
 // } from '@/core/icons'
@@ -15,45 +16,7 @@ export const asyncRouterMap = [
     },
     redirect: '/Example',
     children: [
-      {
-        path: '/Example',
-        name: 'Example',
-        component: PageView,
-        redirect: '/Example/component',
-        meta: {
-          title: '示例',
-          icon: 'menu'
-        },
-        children: [
-          {
-            path: '/Example/component',
-            name: 'Example',
-            component: () => import('@/views/Example/component'),
-            meta: {
-              title: '组件示例',
-              keepAlive: false
-            }
-          },
-          {
-            path: '/tablePage',
-            name: 'tablePage',
-            component: () => import('@/views/tablePage'),
-            meta: {
-              title: '配置化表格页示例',
-              keepAlive: false
-            }
-          },
-          {
-            path: '/cardPage',
-            name: 'cardPage',
-            component: () => import('@/views/cardPage'),
-            meta: {
-              title: '配置化卡片页示例',
-              keepAlive: false
-            }
-          }
-        ]
-      }
+      exampleRouter
       // result
       //   {
       //     path: '/result',

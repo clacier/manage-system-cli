@@ -23,7 +23,6 @@ export default {
       this.viewH = this.itemH * this.$props.itemNum
       this.list = this.dataListSource.slice(0, this.itemNum * this.$props.oneLineItemNum)
       this.offSetY = 0
-      console.log(this.list)
       this.$emit('changeList', this.list)
     }
   },
@@ -61,7 +60,6 @@ export default {
     // 计算可视区域高度
     this.viewH = this.itemH * this.$props.itemNum
     this.list = this.dataListSource.slice(0, this.itemNum * this.$props.oneLineItemNum)
-    console.log(this.list)
     this.$emit('changeList', this.list)
   },
   data() {

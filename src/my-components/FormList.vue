@@ -11,16 +11,34 @@
         "
         :label-col="isSearch ? {} : formItemLayout.labelCol"
         :wrapper-col="isSearch ? {} : formItemLayout.wrapperCol"
-        :label="item.label"
       >
+        <span slot="label" v-if="item.label">
+          <span v-if="item.label"> {{ item.label }}</span>
+
+          <a-tooltip style="margin-left:5px" v-if="item.title" :title="item.title.text" :style="item.title.style">
+            <a-icon type="question-circle-o" />
+          </a-tooltip>
+        </span>
         <a-select
           v-if="item.type === 'select'"
           :mode="item.mode"
           v-decorator="[
             item.key,
             {
-              initialValue: detailInfo[item.key] ? detailInfo[item.key] : item.initValue,
-              rules: [{ required: item.required, message: item.placeholder, ...item.rules }]
+              initialValue: detailInfo[item.key] !== undefined ? detailInfo[item.key] : item.initValue,
+              rules: [
+                { required: item.required, message: item.placeholder },
+                ...(item.rules ? item.rules : []),
+                ...(item.validator
+                  ? [
+                      {
+                        validator: (rule, value, callback) => {
+                          return item.validator(rule, value, callback, form)
+                        }
+                      }
+                    ]
+                  : [])
+              ]
             }
           ]"
           :placeholder="item.placeholder"
@@ -36,8 +54,20 @@
           v-decorator="[
             item.key,
             {
-              initialValue: detailInfo[item.key] ? detailInfo[item.key] : item.initValue,
-              rules: [{ required: item.required, message: item.placeholder, ...item.rules }]
+              initialValue: detailInfo[item.key] !== undefined ? detailInfo[item.key] : item.initValue,
+              rules: [
+                { required: item.required, message: item.placeholder },
+                ...(item.rules ? item.rules : []),
+                ...(item.validator
+                  ? [
+                      {
+                        validator: (rule, value, callback) => {
+                          return item.validator(rule, value, callback, form)
+                        }
+                      }
+                    ]
+                  : [])
+              ]
             }
           ]"
         />
@@ -46,8 +76,20 @@
           v-decorator="[
             item.key,
             {
-              initialValue: detailInfo[item.key] ? detailInfo[item.key] : item.initValue,
-              rules: [{ required: item.required, message: item.placeholder, ...item.rules }]
+              initialValue: detailInfo[item.key] !== undefined ? detailInfo[item.key] : item.initValue,
+              rules: [
+                { required: item.required, message: item.placeholder },
+                ...(item.rules ? item.rules : []),
+                ...(item.validator
+                  ? [
+                      {
+                        validator: (rule, value, callback) => {
+                          return item.validator(rule, value, callback, form)
+                        }
+                      }
+                    ]
+                  : [])
+              ]
             }
           ]"
           :placeholder="item.placeholder"
@@ -62,8 +104,20 @@
           v-decorator="[
             item.key,
             {
-              initialValue: detailInfo[item.key] ? detailInfo[item.key] : item.initValue,
-              rules: [{ required: item.required, message: item.placeholder, ...item.rules }]
+              initialValue: detailInfo[item.key] !== undefined ? detailInfo[item.key] : item.initValue,
+              rules: [
+                { required: item.required, message: item.placeholder },
+                ...(item.rules ? item.rules : []),
+                ...(item.validator
+                  ? [
+                      {
+                        validator: (rule, value, callback) => {
+                          return item.validator(rule, value, callback, form)
+                        }
+                      }
+                    ]
+                  : [])
+              ]
             }
           ]"
           :placeholder="item.placeholder"
@@ -80,62 +134,215 @@
           v-decorator="[
             item.key,
             {
-              initialValue: detailInfo[item.key] ? detailInfo[item.key] : item.initValue,
-              rules: [{ required: item.required, message: item.placeholder, ...item.rules }]
+              initialValue: detailInfo[item.key] !== undefined ? detailInfo[item.key] : item.initValue,
+              rules: [
+                { required: item.required, message: item.placeholder },
+                ...(item.rules ? item.rules : []),
+                ...(item.validator
+                  ? [
+                      {
+                        validator: (rule, value, callback) => {
+                          return item.validator(rule, value, callback, form)
+                        }
+                      }
+                    ]
+                  : [])
+              ]
             }
           ]"
           :placeholder="item.placeholder"
-        />
+        >
+        </a-date-picker>
         <a-textarea
           v-else-if="item.type === 'textarea'"
           style="width: 100%"
           v-decorator="[
             item.key,
             {
-              initialValue: detailInfo[item.key] ? detailInfo[item.key] : item.initValue,
-              rules: [{ required: item.required, message: item.placeholder, ...item.rules }]
+              initialValue: detailInfo[item.key] !== undefined ? detailInfo[item.key] : item.initValue,
+              rules: [
+                { required: item.required, message: item.placeholder },
+                ...(item.rules ? item.rules : []),
+                ...(item.validator
+                  ? [
+                      {
+                        validator: (rule, value, callback) => {
+                          return item.validator(rule, value, callback, form)
+                        }
+                      }
+                    ]
+                  : [])
+              ]
             }
           ]"
           :placeholder="item.placeholder"
-        />
+        >
+        </a-textarea>
         <div v-else-if="item.type === 'slot'">
           <slot :name="item.slotName"></slot>
         </div>
-        <div v-else-if="item.type == 'password'">
-          <a-input-password
+        <a-input-password
+          v-else-if="item.type == 'password'"
+          allow-clear
+          v-decorator="[
+            item.key,
+            {
+              initialValue: detailInfo[item.key] !== undefined ? detailInfo[item.key] : item.initValue,
+              rules: [
+                { required: item.required, message: item.placeholder },
+                ...(item.rules ? item.rules : []),
+                ...(item.validator
+                  ? [
+                      {
+                        validator: (rule, value, callback) => {
+                          return item.validator(rule, value, callback, form)
+                        }
+                      }
+                    ]
+                  : [])
+              ]
+            }
+          ]"
+          :placeholder="item.placeholder"
+        >
+          <a-icon
+            slot="prefix"
+            v-if="item.prefix ? item.prefix.iconType : false"
+            :type="item.prefix.iconType"
+            :style="item.prefix.style"
+          />
+        </a-input-password>
+        <a-input-number
+          v-else-if="item.type === 'number'"
+          allowClear
+          style="min-width:100px;width:100%"
+          :min="item.min"
+          :max="item.max"
+          v-decorator="[
+            item.key,
+            {
+              initialValue: detailInfo[item.key] !== undefined ? detailInfo[item.key] : item.initValue,
+              rules: [
+                { required: item.required, message: item.placeholder },
+                ...(item.rules ? item.rules : []),
+                ...(item.validator
+                  ? [
+                      {
+                        validator: (rule, value, callback) => {
+                          return item.validator(rule, value, callback, form)
+                        }
+                      }
+                    ]
+                  : [])
+              ]
+            }
+          ]"
+          :placeholder="item.placeholder"
+        >
+          <a-icon
+            slot="prefix"
+            v-if="item.prefix ? item.prefix.iconType : false"
+            :type="item.prefix.iconType"
+            :style="item.prefix.style"
+          />
+        </a-input-number>
+        <div v-else-if="item.type === 'color'" class="flex_box" style="align-items:center">
+          <a-input
+            style="margin-right:20px"
             allow-clear
             v-decorator="[
               item.key,
               {
                 initialValue: detailInfo[item.key] ? detailInfo[item.key] : item.initValue,
-                rules: [{ required: item.required, message: item.placeholder, ...item.rules }]
+                rules: [
+                  { required: item.required, message: item.placeholder },
+                  ...(item.rules ? item.rules : []),
+                  ...(item.validator
+                    ? [
+                        {
+                          validator: (rule, value, callback) => {
+                            return item.validator(rule, value, callback, form)
+                          }
+                        }
+                      ]
+                    : [])
+                ]
               }
             ]"
             :placeholder="item.placeholder"
-          />
+          >
+            <a-icon
+              slot="prefix"
+              v-if="item.prefix ? item.prefix.iconType : false"
+              :type="item.prefix.iconType"
+              :style="item.prefix.style"
+            />
+          </a-input>
+          <a-input
+            type="color"
+            allow-clear
+            v-decorator="[
+              item.key,
+              {
+                initialValue: detailInfo[item.key] ? detailInfo[item.key] : item.initValue,
+                rules: [
+                  { required: item.required, message: item.placeholder },
+                  ...(item.rules ? item.rules : []),
+                  ...(item.validator
+                    ? [
+                        {
+                          validator: (rule, value, callback) => {
+                            return item.validator(rule, value, callback, form)
+                          }
+                        }
+                      ]
+                    : [])
+                ]
+              }
+            ]"
+            :placeholder="item.placeholder"
+          >
+          </a-input>
         </div>
         <a-input
           v-else
+          :type="item.type"
           allowClear
+          :maxLength="item.maxLength"
           v-decorator="[
             item.key,
             {
-              initialValue: detailInfo[item.key] ? detailInfo[item.key] : item.initValue,
-              rules: [{ required: item.required, message: item.placeholder, ...item.rules }]
+              initialValue: detailInfo[item.key] !== undefined ? detailInfo[item.key] : item.initValue,
+              rules: [
+                { required: item.required, message: item.placeholder },
+                ...(item.rules ? item.rules : []),
+                ...(item.validator
+                  ? [
+                      {
+                        validator: (rule, value, callback) => {
+                          return item.validator(rule, value, callback, form)
+                        }
+                      }
+                    ]
+                  : [])
+              ]
             }
           ]"
           :placeholder="item.placeholder"
-        />
+        >
+          <a-icon
+            slot="prefix"
+            v-if="item.prefix ? item.prefix.iconType : false"
+            :type="item.prefix.iconType"
+            :style="item.prefix.style"
+          />
+        </a-input>
       </a-form-item>
     </a-form>
   </div>
 </template>
 
 <script>
-const formItemLayout = {
-  labelCol: { span: 4 },
-  wrapperCol: { span: 18 }
-}
 import { message, Modal } from 'ant-design-vue'
 
 export default {
@@ -145,40 +352,48 @@ export default {
       type: Array,
       default: () => []
     },
-    defautInfo: {
+    defaultInfo: {
       default: () => {}
     },
     isSearch: {
       type: Boolean,
       default: false
+    },
+    formItemLayout: {
+      type: Object,
+      default: () => {
+        return {
+          labelCol: { span: 5 },
+          wrapperCol: { span: 15 }
+        }
+      }
     }
   },
   watch: {
-    defautInfo(val) {
-      this.detailInfo = this.defautInfo || {}
+    defaultInfo(val) {
+      this.detailInfo = this.defaultInfo || {}
     }
   },
   data() {
     return {
       form: this.$form.createForm(this),
       detailInfo: '',
-      formItemLayout
+      formList: []
     }
   },
   created() {
-    this.detailInfo = this.defautInfo || {}
+    this.detailInfo = this.defaultInfo || {}
   },
   mounted() {},
   methods: {
     handleSubmit() {
-      let data = false
+      let data = ''
       this.form.validateFields((err, values) => {
         if (!err) {
           let dateFormArr = this.columns.filter(item => item.type === 'date' || item.type === 'dateTime')
           dateFormArr.forEach(item => {
             values[item.key] = values[item.key] ? values[item.key].format('YYYY-MM-DD HH:mm:ss') : ''
           })
-          console.log(values)
           data = values
         }
       })

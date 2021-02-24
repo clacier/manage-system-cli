@@ -12,10 +12,12 @@ import ProLayout, { PageHeaderWrapper } from '@ant-design-vue/pro-layout'
 import themePluginConfig from '../config/themePluginConfig'
 import { pagination, empty } from 'ant-design-vue'
 import { Table, Modal } from '@/my-components'
+import StoreChart from 'idmakers-reportstore-charts'
+console.log(StoreChart)
+Vue.component(StoreChart[1].name, StoreChart[1])
 // mock
 // WARNING: `mockjs` NOT SUPPORT `IE` PLEASE DO NOT USE IN `production` ENV.
 import './mock'
-
 import bootstrap from './core/bootstrap'
 import './core/lazy_use'
 // import './permission' // permission control
@@ -32,7 +34,7 @@ Vue.component('pro-layout', ProLayout)
 Vue.component('page-header-wrapper', PageHeaderWrapper)
 window.umi_plugin_ant_themeVar = themePluginConfig.theme
 if (process.env.NODE_ENV === 'development') {
-  window.BASE_URL = 'http://192.168.0.207:9922/' + 'cloudstore-server-dev/api'
+  window.BASE_URL = 'http://192.168.0.150:9922/' + 'cloudstore-server-dev/api'
 } else {
 }
 new Vue({

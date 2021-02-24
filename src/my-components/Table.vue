@@ -4,7 +4,7 @@
     <div v-if="renderA"></div>
     <div class="table_contanier">
       <table class="table_box" :style="`width:${tableW}px`">
-        <thead class="table_header" :style="`width:${tableW}px`">
+        <thead class="table_header" :style="`width:${tableW}px`" id="thead">
           <tr>
             <th v-if="showCheck" :style="`width:50px;text-align:center;border:${showBorder ? '' : 'none'}`">
               <div class="table_header_item">
@@ -13,12 +13,38 @@
             </th>
             <th
               v-for="(item, index) in columns"
+              :class="{ isExport: item.isExport, pointer: checkExport && isExport }"
+              @click="handleCheckExport(item)"
               :key="index + 'q'"
-              :style="`width:${item.width}px;text-align:${item.align};border:${showBorder ? '' : 'none'}`"
+              :style="
+                `width:${item.children ? '' : item.width}px;text-align:${item.align};border:${showBorder ? '' : 'none'}`
+              "
             >
               <div class="table_header_item">
-                {{ item.title }}
-                <div v-if="widthDrag" class="sub" @mousedown="splitDown($event, index)" />
+                <span> {{ item.title }}</span>
+                <div class="sort_btn_box" v-if="item.sort && !item.renderHtml && !item.renderSlot">
+                  <a-icon type="caret-up" class="sort_btn" @click.stop="handleSort('up', item.key)" />
+                  <a-icon type="caret-down" class="sort_btn" @click.stop="handleSort('down', item.key)" />
+                </div>
+                <div v-if="widthDrag && !item.children" class="sub" @mousedown="splitDown($event, index)" />
+              </div>
+
+              <div v-if="item.children">
+                <th
+                  v-for="(thItem, i) in item.children"
+                  class="children_th"
+                  :style="
+                    `border-left:${i == 0 ? 'none' : ''} ;width:${thItem.width}px;text-align:${thItem.align};border:${
+                      showBorder ? '' : 'none'
+                    }`
+                  "
+                >
+                  <div class="table_header_item">
+                    <span> {{ thItem.title }}</span>
+                    <div class="sort_btn_box" v-if="thItem.sort && !thItem.renderHtml && !thItem.renderSlot"></div>
+                    <div v-if="widthDrag" class="sub" @mousedown="splitDown($event, index, i + 1)" />
+                  </div>
+                </th>
               </div>
             </th>
           </tr>
@@ -29,6 +55,7 @@
           v-if="virtualScroll"
           class="table_content"
           ref="table_content"
+          :class="{ table_content_border: dataList.length == 0 }"
           @scroll="hanldeScroll"
           :style="
             `height:${viewH}px;overflow-y:auto;position:${dataList.length == 0 ? 'relative' : ''}; min-height:${
@@ -37,7 +64,7 @@
           "
         >
           <div :style="{ height: scorllH }">
-            <tbody :style="`transform:translateY(${offSetY}px); `">
+            <tbody :style="`transform:translateY(${offSetY}px); `" id="tbody">
               <tr class="table_conten_item_box" v-for="(item, index) in list" :style="{ height: itemH + 'px' }">
                 <td
                   v-if="showCheck"
@@ -51,22 +78,54 @@
                 <td
                   v-for="(item2, key) in columns"
                   :key="key + 'w'"
+                  :id="`td_${item2.key}_${index}`"
                   class="table_content_item"
                   :style="
-                    `width:${item2.width}px;text-align:${item2.align};border:${
+                    `width:${item2.children ? 'auto' : item2.width + 'px'};text-align:${item2.align};border:${
                       showBorder ? '' : 'none'
-                    };justify-content:${item2.align};align-items:center;padding:0`
+                    };justify-content:${item2.align};align-items:center;padding:0 10px`
                   "
                 >
-                  <slot
-                    v-if="item2.renderSlot"
-                    :name="item2.key"
-                    :columnsItem="item2"
-                    :item="item"
-                    :index="index"
-                  ></slot>
-                  <div v-else-if="item2.renderHtml" v-html="item2.renderHtml(item)"></div>
-                  <div v-else>{{ item[item2.key] ? item[item2.key] : '-' }}</div>
+                  <div v-if="item2.children">
+                    <td
+                      v-for="(tdItem, i) in item2.children"
+                      :style="
+                        `border-left:${i == 0 ? 'none' : ''} ;width:${tdItem.width}px;text-align:${
+                          tdItem.align
+                        };border:${showBorder ? '' : 'none'}`
+                      "
+                    >
+                      <slot
+                        :id="`td_${tdItem.key}`"
+                        v-if="tdItem.renderSlot"
+                        :name="tdItem.key"
+                        :columnsItem="tdItem"
+                        :item="item"
+                      ></slot>
+                      <div v-else-if="tdItem.renderHtml" v-html="item['renderHtmlText_' + tdItem.key]"></div>
+                      <div v-else :title="item[tdItem.key]">
+                        {{ item[tdItem.key] || item[tdItem.key] === 0 ? item[tdItem.key] : '-' }}
+                      </div>
+                    </td>
+                  </div>
+                  <div v-else>
+                    <slot
+                      :class="{ ellipsis: item2.ellipsis }"
+                      v-if="item2.renderSlot"
+                      :name="item2.key"
+                      :columnsItem="item2"
+                      :item="item"
+                      :index="index"
+                    ></slot>
+                    <div
+                      :class="{ ellipsis: item2.ellipsis }"
+                      v-else-if="item2.renderHtml"
+                      v-html="item['renderHtmlText_' + item2.key]"
+                    ></div>
+                    <div v-else :title="item[item2.key]" :class="{ ellipsis: item2.ellipsis }">
+                      {{ item[item2.key] ? item[item2.key] : '-' }}
+                    </div>
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -80,6 +139,7 @@
           v-else
           class="table_content"
           ref="table_content"
+          :class="{ table_content_border: dataList.length == 0 }"
           :style="
             `height:${scroll.y ? scroll.y + 'px' : 'auto'}; position:${
               dataList.length == 0 ? 'relative' : ''
@@ -87,7 +147,7 @@
           "
         >
           <div>
-            <tbody>
+            <tbody id="tbody">
               <tr
                 class="table_conten_item_box"
                 :key="index + 'a'"
@@ -98,13 +158,44 @@
                   v-for="item2 in columns"
                   :key="item2.key"
                   class="table_content_item"
+                  :id="`td_${item2.key}_${index}`"
                   :style="
                     `width:${item2.width}px;text-align:${item2.align};justify-content:${item2.align};align-items:center`
                   "
                 >
-                  <slot v-if="item2.renderSlot" :name="item2.key" :columnsItem="item2" :item="item"></slot>
-                  <div v-else-if="item2.renderHtml" v-html="item2.renderHtml(item)"></div>
-                  <div v-else>{{ item[item2.key] || item[item2.key] === 0 ? item[item2.key] : '-' }}</div>
+                  <div v-if="item2.children">
+                    <td v-for="tdItem in item2.children">
+                      <slot
+                        :id="`td_${tdItem.key}`"
+                        v-if="tdItem.renderSlot"
+                        :name="tdItem.key"
+                        :columnsItem="tdItem"
+                        :item="item"
+                      ></slot>
+                      <div v-else-if="tdItem.renderHtml" v-html="item['renderHtmlText_' + tdItem.key]"></div>
+                      <div v-else :title="item[tdItem.key]">
+                        {{ item[tdItem.key] || item[tdItem.key] === 0 ? item[tdItem.key] : '-' }}
+                      </div>
+                    </td>
+                  </div>
+                  <div v-else>
+                    <slot
+                      :class="{ ellipsis: item2.ellipsis }"
+                      v-if="item2.renderSlot"
+                      :name="item2.key"
+                      :columnsItem="item2"
+                      :item="item"
+                      :index="index"
+                    ></slot>
+                    <div
+                      :class="{ ellipsis: item2.ellipsis }"
+                      v-else-if="item2.renderHtml"
+                      v-html="item['renderHtmlText_' + item2.key]"
+                    ></div>
+                    <div v-else :title="item[item2.key]" :class="{ ellipsis: item2.ellipsis }">
+                      {{ item[item2.key] ? item[item2.key] : '-' }}
+                    </div>
+                  </div>
                 </td>
               </tr>
               <div class="no_data" v-if="dataList.length == 0">
@@ -119,21 +210,31 @@
 </template>
 
 <script>
+import { message } from 'ant-design-vue'
+import Vue from 'vue'
+let table_content = ''
 export default {
   name: 'Table',
   watch: {
-    dataList(val) {
-      this.list = this.$props.dataList
-      // 重新计算
-      if (this.$props.virtualScroll) {
-        // 计算总高度
-        // const table_content = this.$refs.table_content
-        table_content.scrollTop = 0
-        this.scorllH = this.itemH * this.dataList.length + 'px'
-        // 计算可视区域高度
-        this.viewH = this.itemH * this.$props.itemNum
-      }
+    dataList: {
+      handler() {
+        // 重新计算
+        if (this.$props.virtualScroll) {
+          // 计算总高度
+          // const table_content = this.$refs.table_content
+          table_content.scrollTop = 0
+          this.scorllH = this.itemH * this.dataList.length + 'px'
+          // 计算可视区域高度
+          this.viewH = this.itemH * this.$props.itemNum
+          this.list = this.dataList.slice(0, this.itemNum)
+        } else {
+          this.list = this.$props.dataList
+        }
+        this.formatRenderHtml()
+      },
+      deep: true
     },
+
     rowCheck(val) {
       this.showCheck = val
     }
@@ -157,17 +258,20 @@ export default {
     },
     columns: {
       type: Array,
-      required: true,
       default: () => []
     },
     scroll: {
       type: Object,
       default: () => {
         return {
-          y: screen.availHeight - 500,
+          y: Number,
           x: Number
         }
       }
+    },
+    checkExport: {
+      type: Boolean,
+      default: false
     },
     virtualScroll: {
       type: Boolean,
@@ -175,7 +279,7 @@ export default {
     },
     exportFileName: {
       type: String,
-      default: '下载'
+      default: '导出'
     },
     showBorder: {
       type: Boolean,
@@ -191,11 +295,14 @@ export default {
       renderA: false,
       tableW: 0,
       list: [],
+      sortType: '',
+      sortKey: '',
       checkList: [],
       checkAll: false,
       showCheck: false,
       isDrag: false,
       xian_left: '',
+      isExport: false,
       viewH: '',
       terminalList: [],
       scrollWidth: '',
@@ -212,14 +319,12 @@ export default {
     this.columns.forEach(item => {
       this.tableW += parseInt(item.width)
     })
-    console.log(this.scroll)
     if (this.$props.rowCheck) {
       this.showCheck = true
       this.$props.dataList.isCheck = false
       this.tableW += 50
       // this.$props.dataList.forEarch((item.isCheck = false))
     }
-    console.log(this.dataList)
     if (this.$props.virtualScroll) {
       // 计算总高度
       this.scorllH = this.itemH * this.dataList.length + 'px'
@@ -230,11 +335,10 @@ export default {
     } else {
       this.list = this.$props.dataList
     }
+    this.formatRenderHtml()
   },
   mounted() {
-    const table_content = this.$refs.table_content
-    console.log(this.tableW)
-    console.log(table_content.offsetWidth, table_content.clientWidth)
+    table_content = this.$refs.table_content
     this.scrollWidth = table_content.offsetWidth - table_content.clientWidth
   },
   methods: {
@@ -245,9 +349,45 @@ export default {
         Math.floor(e.target.scrollTop / this.itemH),
         Math.floor(e.target.scrollTop / this.itemH) + this.itemNum + 5
       )
+      this.formatRenderHtml()
+    },
+    handleSort(sortType, key) {
+      if (sortType) {
+        this.sortType = sortType
+        this.sortKey = key
+      }
+      switch (this.sortType) {
+        case 'up':
+          this.list = this.list.sort((item, item2) => item[this.sortKey] - item2[this.sortKey])
+          this.dataList = this.dataList.sort((item, item2) => item[this.sortKey] - item2[this.sortKey])
+
+          break
+        case 'down':
+          this.list = this.list.sort((item, item2) => item2[this.sortKey] - item[this.sortKey])
+          this.dataList = this.dataList.sort((item, item2) => item2[this.sortKey] - item[this.sortKey])
+          break
+        default:
+          break
+      }
+    },
+    formatRenderHtml() {
+      this.columns.forEach(item2 => {
+        if (item2.renderHtml) {
+          this.list.forEach(item => {
+            item['renderHtmlText_' + item2.key] = item2.renderHtml(item)
+          })
+        }
+      })
+      console.log(this.list)
     },
     getCheck() {
       console.time()
+    },
+    handleCheckExport(item) {
+      if (this.isExport) {
+        item.isExport = !item.isExport
+        this.renderA = !this.renderA
+      }
     },
     handleAllCheck(e) {
       console.log(e)
@@ -282,35 +422,37 @@ export default {
         message.error('暂无数据，无法导出')
         return false
       }
+      if (this.checkExport) {
+        if (this.isExport) {
+          this.checkExportTable()
+        } else {
+          this.columns.forEach(item => {
+            item.isExport = true
+          })
+          this.renderA = !this.renderA
+          message.info('请选择你将要导出的表格列')
+          this.isExport = true
+        }
+      } else {
+        this.exportTable()
+      }
+    },
+    exportTable() {
       let titleName = ''
       //列标题
       let str = ``
-      let tableHeader = ''
-      let tablecolumns = this.columns.filter(item => item.scopedSlots !== 'action')
-      tablecolumns.forEach(item => {
-        tableHeader += `<td style='text-align:center'>${item.title}</td>`
-      })
-      str += `<tr style='text-align:center'>${tableHeader}</tr>`
-      //循环遍历，每行加入tr标签，每个单元格加td标签
-      for (let i = 0; i < this.dataList.length; i++) {
-        str += '<tr>'
-        let item = this.dataList[i]
-        tablecolumns.forEach(cloumItem => {
-          str += `<td style='text-align:${cloumItem.align};height:auto;width:${cloumItem.width}px'>${
-            cloumItem.renderHtml ? cloumItem.renderHtml(item) : item[cloumItem.key] + '\t'
-          }</td>`
-        })
-        //增加\t为了不让表格显示科学计数法或者其他格式
-        str += '</tr>'
-      }
+      let tableHeader = document.querySelector('#thead').innerHTML
+      str += tableHeader
+      let tbodyStr = document.querySelector('#tbody').innerHTML
+      str += tbodyStr
       //   console.log(str)
       //Worksheet名
       let worksheet = 'Sheet1'
       let url = 'data:application/vnd.ms-excel;base64,'
 
       //下载的表格模板数据
-      let template = `<html xmlns:o="urn:schemas-microsoft-com:office:office" 
-      xmlns:x="urn:schemas-microsoft-com:office:excel" 
+      let template = `<html xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:x="urn:schemas-microsoft-com:office:excel"
       xmlns="http://www.w3.org/TR/REC-html40">
       <head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>
         <x:Name>${worksheet}</x:Name>
@@ -322,6 +464,78 @@ export default {
       link.href = url + this.base64(template)
       link.download = `${this.$props.exportFileName}`
       link.click()
+      tableHeader = null
+      tbodyStr = null
+    },
+    // 选择性导出
+    checkExportTable() {
+      let titleName = ''
+      //列标题
+      let str = `<thead><tr>`
+      let tableHeader = ''
+      let tablecolumns = this.columns.filter(item => item.isExport)
+      if (tablecolumns.length == 0) {
+        message.warning('请选择你将要导出的表格列')
+        return
+      }
+      tablecolumns.forEach(item => {
+        tableHeader += `<th style=text-align:${item.align}>${item.title}</th>`
+      })
+      str += `${tableHeader}</tr></thead>`
+      if (this.$props.virtualScroll) {
+        for (let i = 0; i < this.dataList.length; i++) {
+          str += '<tr>'
+          let item = this.dataList[i]
+          tablecolumns.forEach(cloumItem => {
+            let tdHtml = ''
+            if (cloumItem.renderHtml) {
+              tdHtml = `<td style=text-align:${item.align}>${cloumItem.renderHtml(item)}</td>`
+            } else {
+              tdHtml = `<td style=text-align:${item.align}>${item[cloumItem.key]}</td>`
+            }
+            str += `${tdHtml + '\t'}`
+          })
+          //增加\t为了不让表格显示科学计数法或者其他格式
+          str += '</tr>'
+        }
+      } else {
+        for (let i = 0; i < this.dataList.length; i++) {
+          str += '<tr>'
+          let item = this.dataList[i]
+          tablecolumns.forEach(cloumItem => {
+            let tdHtml = ''
+            tdHtml = document.querySelector(`#td_${cloumItem.key}_${i}`).innerHTML
+            str += `<td style=text-align:${cloumItem.align}>${tdHtml + '\t'}</td>`
+          })
+          //增加\t为了不让表格显示科学计数法或者其他格式
+          str += '</tr>'
+        }
+      }
+
+      //   console.log(str)
+      //Worksheet名
+      let worksheet = 'Sheet1'
+      let url = 'data:application/vnd.ms-excel;base64,'
+
+      //下载的表格模板数据
+      let template = `<html xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:x="urn:schemas-microsoft-com:office:excel"
+      xmlns="http://www.w3.org/TR/REC-html40">
+      <head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>
+        <x:Name>${worksheet}</x:Name>
+        <x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet>
+        </x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
+        </head><body><table>${str}</table></body></html>`
+      //下载模板
+      var link = document.createElement('a')
+      link.href = url + this.base64(template)
+      link.download = `${this.$props.exportFileName}`
+      link.click()
+      this.isExport = false
+      this.columns.forEach(item => {
+        item.isExport = false
+      })
+      this.renderA = !this.renderA
     },
     base64(s) {
       return window.btoa(unescape(encodeURIComponent(s)))
@@ -378,6 +592,15 @@ export default {
       display: flex;
       border-top: 1px solid #e8e8e8;
     }
+    .children_th {
+      border: 1px solid #e8e8e8;
+      border-right: none;
+      border-bottom: none;
+    }
+    .isExport {
+      background: #1890ff;
+      color: #ffffff;
+    }
     tr {
       height: auto;
       border-bottom: 1px solid #e8e8e8;
@@ -426,17 +649,44 @@ export default {
     .table_content {
       background: #ffffff;
       overflow-y: auto;
-      //   max-height: calc(100vh - 400px);
+      max-height: calc(100vh - 450px);
+
       //   height: 70vh;
     }
+    .table_content_border {
+      border: 1px solid #e6e6e6;
+      border-left: none;
+      border-top: none;
+    }
     .table_content_item {
+      position: relative;
       display: flex;
+      width: 100%;
       padding: 10px;
       flex-wrap: wrap;
       justify-content: flex-start;
       align-items: flex-start;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+    .sort_btn_box {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      right: 10px;
+      .sort_btn {
+        cursor: pointer;
+      }
+      .sort_btn:hover {
+        color: #1890ff;
+      }
+    }
+    .ellipsis {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      word-break: keep-all;
     }
   }
 }

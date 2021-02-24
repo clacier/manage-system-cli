@@ -37,7 +37,7 @@
         </div>
       </div>
     </page-header>
-    <div class="content" :style="`height:${contentH}px`">
+    <div class="content">
       <div class="page-header-index-wide">
         <slot>
           <!-- keep-alive  -->
@@ -125,8 +125,9 @@ export default {
 
 <style lang="less" scoped>
 .content {
-  margin: 24px 24px 0;
+  margin: 10px 12px 0;
   overflow-y: auto;
+  max-height: calc(100vh - 264px);
   .link {
     margin-top: 16px;
     &:not(:empty) {

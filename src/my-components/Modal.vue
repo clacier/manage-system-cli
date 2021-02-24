@@ -5,45 +5,67 @@
       <div v-if="visible && isReload">
         <div
           class="modal_content"
+          :class="{ modal_content_large: isLarge }"
           :style="
-            `width:${width}px;
-        margin-left:-${width / 2}px;
+            `${
+              isLarge
+                ? ''
+                : `width:${modalWidth}px;
+        margin-left:-${modalWidth / 2}px;
         left:${left}px;top:${top}px`
+            }`
           "
         >
           <div class="modal_header" @mousedown="handleDarg">
             <div class="modal_title">{{ title }}</div>
-            <a-icon type="close" @click="handleCancel" id="close" class="cursor" />
+            <div class="modal_action">
+              <a-icon type="line" class="cursor" @click="handleShrink" v-if="isLarge" />
+              <a-icon type="border" class="cursor" @click="handleEnlarge" v-else />
+              <a-icon style="margin-left:10px" type="close" @click="handleCancel" id="close" class="cursor" />
+            </div>
           </div>
           <div class="modal_body">
             <slot></slot>
           </div>
           <div class="modal_bottom" v-if="!hideFooter">
-            <a-button type="primary" @click="handleOk" style="margin-right: 10px">确认</a-button>
-            <a-button @click="handleCancel">取消</a-button>
+            <a-button :size="isLarge ? 'large' : 'default'" type="primary" @click="handleOk" style="margin-right: 10px"
+              >确认</a-button
+            >
+            <a-button :size="isLarge ? 'large' : 'default'" @click="handleCancel">取消</a-button>
           </div>
         </div>
       </div>
       <div v-show="visible && !isReload">
         <div
+          :class="{ modal_content_large: isLarge }"
           class="modal_content"
           :style="
-            `width:${width}px;
-        margin-left:-${width / 2}px;
+            `${
+              isLarge
+                ? ''
+                : `width:${modalWidth}px;
+        margin-left:-${modalWidth / 2}px;
         left:${left}px;top:${top}px`
+            }`
           "
         >
           <div class="modal_header" @mousedown="handleDarg">
             <div class="modal_title">{{ title }}</div>
-            <a-icon type="close" @click="handleCancel" id="close" class="cursor" />
+            <div class="modal_action">
+              <a-icon type="line" class="cursor" @click="handleShrink" v-if="isLarge" />
+              <a-icon type="border" class="cursor" @click="handleEnlarge" v-else />
+              <a-icon style="margin-left:10px" type="close" @click="handleCancel" id="close" class="cursor" />
+            </div>
           </div>
           <div class="modal_body">
             <slot></slot>
           </div>
 
           <div class="modal_bottom" v-if="!hideFooter">
-            <a-button type="primary" @click="handleOk" style="margin-right: 10px">确认</a-button>
-            <a-button @click="handleCancel">取消</a-button>
+            <a-button :size="isLarge ? 'large' : 'default'" type="primary" @click="handleOk" style="margin-right: 10px"
+              >确认</a-button
+            >
+            <a-button :size="isLarge ? 'large' : 'default'" @click="handleCancel">取消</a-button>
           </div>
         </div>
       </div>
@@ -57,6 +79,11 @@ export default {
   model: {
     prop: 'visible', //这个字段，是指父组件设置 v-model 时，将变量值传给子组件的 msg
     event: 'visible-event' //这个字段，是指父组件监听 parent-event 事件
+  },
+  watch: {
+    width(val) {
+      this.modalWidth = val
+    }
   },
   props: {
     width: {
@@ -91,20 +118,28 @@ export default {
     return {
       opacity: 0,
       left: '',
+      oldLeft: '',
+      oldTop: '',
+      modalWidth: 520,
+      isLarge: false,
       top: ''
     }
   },
+  created() {
+    this.modalWidth = this.width
+  },
   methods: {
     handleDarg(e) {
-      if (e.target.nodeName === 'path' || e.target.nodeName === 'svg') {
+      if (e.target.nodeName === 'path' || e.target.nodeName === 'svg' || this.isLarge) {
         return
       }
       let startX = e.pageX
-      let startLeft = e.target.offsetParent.offsetLeft
-      let startTop = e.target.offsetParent.offsetTop
+      console.log(e)
+      let startLeft = e.target.offsetParent.offsetParent.offsetLeft
+      let startTop = e.target.offsetParent.offsetParent.offsetTop
       let startY = e.pageY
       let marL = this.width / 2
-      let left = window.screen.availWidth / 2
+      console.log(startLeft)
       this.isDrag = true
       // return false
       ;(document.onmousemove = e => {
@@ -118,6 +153,12 @@ export default {
           document.onmousemove = null
           document.onmouseup = null
         })
+    },
+    handleEnlarge() {
+      this.isLarge = true
+    },
+    handleShrink() {
+      this.isLarge = false
     },
     handleOk() {
       this.$emit('ok')
@@ -148,6 +189,10 @@ export default {
 }
 .modal_box {
   position: relative;
+  .modal_header_box {
+    position: relative;
+    width: 100%;
+  }
   .modal_mask {
     position: fixed;
     left: 0;
@@ -158,14 +203,33 @@ export default {
     width: 100%;
     height: 100vh;
   }
+  .enlarge_btn {
+    position: relative;
+  }
+  .enlarge_btn_icon2 {
+    position: absolute;
+    top: -3px;
+    right: -5px;
+  }
   .modal_header {
     width: 100%;
-    padding: 15px;
+    padding: 0 15px;
     display: flex;
+    cursor: move;
+    position: relative;
     background: #1890ff;
     color: #ffffff;
-    justify-content: space-between;
+    // position: relative;
+    justify-content: center;
     align-items: center;
+    .modal_action {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      display: flex;
+      align-items: center;
+      transform: translateY(-50%);
+    }
   }
   .modal_content {
     position: fixed;
@@ -178,6 +242,27 @@ export default {
     // transition-duration: 1s;
     background: #ffffff;
   }
+  .modal_content_large {
+    position: fixed;
+    left: 0;
+    z-index: 200;
+    width: 100%;
+    height: 100vh;
+    margin-left: 0;
+    top: 0;
+    transform: translateY(0);
+    background: #ffffff;
+    .modal_header {
+      cursor: default;
+    }
+    .modal_body {
+      padding: 15px;
+      height: calc(100vh - 104px);
+      max-height: calc(100vh - 110px);
+
+      overflow: auto;
+    }
+  }
   .modal_body {
     padding: 15px;
     max-height: 70vh;
@@ -185,9 +270,9 @@ export default {
   }
   .modal_title {
     width: 100%;
-
+    height: 40px;
+    line-height: 40px;
     text-align: center;
-    cursor: move;
   }
   .modal_bottom {
     width: 100%;
