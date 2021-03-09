@@ -164,7 +164,7 @@
                   "
                 >
                   <div v-if="item2.children">
-                    <td v-for="tdItem in item2.children">
+                    <td v-for="tdItem in item2.children" :key="tdItem.key + 'q'">
                       <slot
                         :id="`td_${tdItem.key}`"
                         v-if="tdItem.renderSlot"
@@ -632,7 +632,7 @@ export default {
       height: 40px;
       right: -1px;
       cursor: col-resize;
-      z-index: 1000;
+      z-index: 99;
     }
     .header_fixed {
       position: absolute;
