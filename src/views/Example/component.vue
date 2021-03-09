@@ -13,12 +13,6 @@
           alt=""
         />
         <div style="margin: 0 10px">❥</div>
-
-        <img
-          style="width: 100px"
-          src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=4206798547,2967237176&fm=26&gp=0.jpg"
-          alt=""
-        />
       </div>
     </Modal>
     <div class="title">虚拟滚动组件</div>

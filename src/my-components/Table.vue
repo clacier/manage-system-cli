@@ -47,7 +47,12 @@
         >
           <div :style="{ height: scorllH }">
             <tbody :style="`transform:translateY(${offSetY}px); `" id="tbody">
-              <tr class="table_conten_item_box" v-for="(item, index) in list" :key="item.key" :style="{ height: itemH + 'px' }">
+              <tr
+                class="table_conten_item_box"
+                v-for="(item, index) in list"
+                :key="item.key"
+                :style="{ height: itemH + 'px' }"
+              >
                 <td
                   v-if="showCheck"
                   class="table_content_item"
@@ -68,7 +73,7 @@
                     };justify-content:${item2.align};align-items:center;padding:0 10px`
                   "
                 >
-                  <div >
+                  <div>
                     <slot
                       :class="{ ellipsis: item2.ellipsis }"
                       v-if="item2.renderSlot"
@@ -124,7 +129,7 @@
                   "
                 >
                   <div v-if="item2.children">
-                    <td v-for="tdItem in item2.children" :key="tdItem.key">
+                    <td v-for="tdItem in item2.children" :key="tdItem.key + 'q'">
                       <slot
                         :id="`td_${tdItem.key}`"
                         v-if="tdItem.renderSlot"
@@ -592,7 +597,7 @@ export default {
       height: 40px;
       right: -1px;
       cursor: col-resize;
-      z-index: 1000;
+      z-index: 99;
     }
     .header_fixed {
       position: absolute;

@@ -85,6 +85,7 @@
       />
       <span style="margin-left: 10px">共{{ Math.ceil(total / pageSize) }}页</span>
     </div>
+    <slot name="pageContent"></slot>
   </div>
 </template>
 
@@ -191,6 +192,8 @@ export default {
         case 'add':
           this.handleAdd()
           break
+        case 'self':
+          this.$parent[actionItem.funcName]()
 
         default:
           break
