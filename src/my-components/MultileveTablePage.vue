@@ -8,12 +8,12 @@
           :defautInfo="searchInfo"
           ref="searchForm"
           :isSearch="true"
-          style="inline-hegiht:normal"
+          style="inline-hegiht: normal"
         >
         </FormList>
         <slot name="searchContent"> </slot>
         <a-button
-          style="margin-left:20px"
+          style="margin-left: 20px"
           v-if="config.isSearch || config.isSearch === undefined"
           type="primary"
           class="search_btn"
@@ -40,7 +40,7 @@
     <Modal v-model="visible.edit" :width="modalWidth.edit" :title="modalTitle" @ok="handleOK">
       <div class="edit_modal_content">
         <slot name="editLeftContent"></slot>
-        <FormList :columns="formList" :defautInfo="detailInfo" ref="Form" style="width:100%">
+        <FormList :columns="formList" :defautInfo="detailInfo" ref="Form" style="width: 100%">
           <slot v-for="slotItem in slotFormList" :name="slotItem.slotName" :slot="slotItem.slotName"></slot>
         </FormList>
       </div>
@@ -66,7 +66,7 @@
       ref="Table"
     >
       <template v-for="slotItem in tableSlotList" slot-scope="{ columnsItem, item }" :slot="slotItem.key">
-        <slot :name="slotItem.key" :item="item"> </slot>
+        <slot :name="slotItem.key" :item="item" :columnsItem="columnsItem"> </slot>
       </template>
       <div slot="action" slot-scope="{ columnsItem, item }" class="flex_box">
         <div v-for="(actionItem, index) in columnsItem.actionList" :key="index + 'w'">

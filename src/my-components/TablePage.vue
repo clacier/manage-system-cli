@@ -8,7 +8,7 @@
           :defautInfo="searchInfo"
           ref="searchForm"
           :isSearch="true"
-          style="inline-hegiht:normal"
+          style="inline-hegiht: normal"
         >
         </FormList>
         <slot name="searchContent"> </slot>
@@ -39,7 +39,7 @@
     <Modal v-model="visible.edit" :width="modalWidth.edit" :title="modalTitle" @ok="handleOK">
       <div class="edit_modal_content">
         <slot name="editLeftContent"></slot>
-        <FormList :columns="formList" :defautInfo="detailInfo" ref="Form" style="width:100%">
+        <FormList :columns="formList" :defautInfo="detailInfo" ref="Form" style="width: 100%">
           <slot v-for="slotItem in slotFormList" :name="slotItem.slotName" :slot="slotItem.slotName"></slot>
         </FormList>
       </div>
@@ -66,7 +66,7 @@
       ref="Table"
     >
       <template v-for="slotItem in tableSlotList" slot-scope="{ columnsItem, item }" :slot="slotItem.key">
-        <slot :name="slotItem.key" :item="item"> </slot>
+        <slot :name="slotItem.key" :item="item" :columnsItem="columnsItem"> </slot>
       </template>
       <template slot="action" slot-scope="{ columnsItem, item }" class="flex_box">
         <div v-for="(actionItem, index) in columnsItem.actionList" :key="index + 'w'">
@@ -109,7 +109,7 @@
 <script>
 const formItemLayout = {
   labelCol: { span: 4 },
-  wrapperCol: { span: 18 }
+  wrapperCol: { span: 18 },
 }
 import { message, Modal } from 'ant-design-vue'
 import { VirtualScroll, FormList } from '@/my-components'
@@ -120,12 +120,12 @@ export default {
   props: {
     config: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     searchParams: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
   data() {
     return {
@@ -136,7 +136,7 @@ export default {
       exportFileName: '',
       visible: {
         edit: false,
-        detail: false
+        detail: false,
       },
       searchInfo: {},
       total: 100,
@@ -153,7 +153,7 @@ export default {
       page: 1,
       list3: [],
       tableAction: [],
-      pageSize: 10
+      pageSize: 10,
     }
   },
   created() {
@@ -166,8 +166,8 @@ export default {
     //     date: '2017-06-07'
     //   })
     // }
-    this.slotFormList = this.formList.filter(item => item.type === 'slot')
-    this.tableSlotList = this.columns.filter(item => item.renderSlot)
+    this.slotFormList = this.formList.filter((item) => item.type === 'slot')
+    this.tableSlotList = this.columns.filter((item) => item.renderSlot)
   },
   mounted() {
     this.getList()
@@ -209,7 +209,7 @@ export default {
           content: actionItem.promptContent ? actionItem.promptContent : '是否删除该数据？',
           onOk: () => {
             this.deleteOk(item, actionItem.fieldName)
-          }
+          },
         })
       } else if (actionItem.type === 'edit') {
         this.handleEdit(item, actionItem.fieldName)
@@ -235,12 +235,12 @@ export default {
       this.searchInfo = this.$refs.searchForm.handleSubmit()
       let params = {
         ...this.searchInfo,
-        ...this.searchParams
+        ...this.searchParams,
       }
       params[this.pageInfo.pageNum] = this.page
       params[this.pageInfo.pageSize] = this.pageSize
-      let dateFormArr = this.searchList.filter(item => item.type === 'date' || item.type === 'dateTime')
-      dateFormArr.forEach(item => {
+      let dateFormArr = this.searchList.filter((item) => item.type === 'date' || item.type === 'dateTime')
+      dateFormArr.forEach((item) => {
         params[item.key] = params[item.key] ? params[item.key].format('YYYY-MM-DD HH:mm:ss') : ''
       })
       if (this.searchFunc) {
@@ -329,8 +329,8 @@ export default {
           }
         }
       }
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="less" scoped>

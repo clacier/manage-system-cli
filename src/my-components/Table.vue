@@ -28,24 +28,6 @@
                 </div>
                 <div v-if="widthDrag && !item.children" class="sub" @mousedown="splitDown($event, index)" />
               </div>
-
-              <div v-if="item.children">
-                <th
-                  v-for="(thItem, i) in item.children"
-                  class="children_th"
-                  :style="
-                    `border-left:${i == 0 ? 'none' : ''} ;width:${thItem.width}px;text-align:${thItem.align};border:${
-                      showBorder ? '' : 'none'
-                    }`
-                  "
-                >
-                  <div class="table_header_item">
-                    <span> {{ thItem.title }}</span>
-                    <div class="sort_btn_box" v-if="thItem.sort && !thItem.renderHtml && !thItem.renderSlot"></div>
-                    <div v-if="widthDrag" class="sub" @mousedown="splitDown($event, index, i + 1)" />
-                  </div>
-                </th>
-              </div>
             </th>
           </tr>
         </thead>
@@ -65,7 +47,12 @@
         >
           <div :style="{ height: scorllH }">
             <tbody :style="`transform:translateY(${offSetY}px); `" id="tbody">
-              <tr class="table_conten_item_box" v-for="(item, index) in list" :style="{ height: itemH + 'px' }">
+              <tr
+                class="table_conten_item_box"
+                v-for="(item, index) in list"
+                :key="item.key"
+                :style="{ height: itemH + 'px' }"
+              >
                 <td
                   v-if="showCheck"
                   class="table_content_item"
@@ -86,29 +73,7 @@
                     };justify-content:${item2.align};align-items:center;padding:0 10px`
                   "
                 >
-                  <div v-if="item2.children">
-                    <td
-                      v-for="(tdItem, i) in item2.children"
-                      :style="
-                        `border-left:${i == 0 ? 'none' : ''} ;width:${tdItem.width}px;text-align:${
-                          tdItem.align
-                        };border:${showBorder ? '' : 'none'}`
-                      "
-                    >
-                      <slot
-                        :id="`td_${tdItem.key}`"
-                        v-if="tdItem.renderSlot"
-                        :name="tdItem.key"
-                        :columnsItem="tdItem"
-                        :item="item"
-                      ></slot>
-                      <div v-else-if="tdItem.renderHtml" v-html="item['renderHtmlText_' + tdItem.key]"></div>
-                      <div v-else :title="item[tdItem.key]">
-                        {{ item[tdItem.key] || item[tdItem.key] === 0 ? item[tdItem.key] : '-' }}
-                      </div>
-                    </td>
-                  </div>
-                  <div v-else>
+                  <div>
                     <slot
                       :class="{ ellipsis: item2.ellipsis }"
                       v-if="item2.renderSlot"
