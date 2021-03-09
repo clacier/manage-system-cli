@@ -3,7 +3,7 @@
     <MultileveTablePage :config="config" :searchParams="searchParams" ref="tabPage" @openDetail="openDetail">
       <!-- 页面头部自定义   -->
       <template slot="pageHeader">
-        <a-tabs default-active-key="1" style="width:50%">
+        <a-tabs default-active-key="1" style="width: 50%">
           <a-tab-pane key="1" tab="Tab 1"> </a-tab-pane>
           <a-tab-pane key="2" tab="Tab 2" force-render> </a-tab-pane>
           <a-tab-pane key="3" tab="Tab 3"> </a-tab-pane>
@@ -33,7 +33,7 @@
 <script>
 import MultileveTablePage from '@/my-components/MultileveTablePage'
 import config from './config'
-import { formartDate } from '@/utils/format'
+import { debounce } from '@/utils/format'
 import { FormatRender } from '@/my-components'
 export default {
   name: 'TableListWrapper',
@@ -42,10 +42,10 @@ export default {
     return {
       config: config,
       searchParams: {
-        supplierAuditStatus: 1
+        supplierAuditStatus: 1,
       },
       actItem: {
-        name: '565656'
+        name: '565656',
       },
       formatColumns: [
         {
@@ -55,37 +55,36 @@ export default {
           contentStyle: '',
           renderSlot: true,
           slotName: 'name1',
-          width: '50%'
+          width: '50%',
         },
         {
           name: '名称2',
           key: 'name2',
           nameStyle: '',
           contentStyle: '',
-          renderHtml: data => {
+          renderHtml: (data) => {
             return `<span>${data.name}22222<span>`
           },
-          width: '100%'
+          width: '100%',
         },
         {
           name: '名称3',
           nameStyle: '',
           contentStyle: '',
           key: 'name3',
-          width: '50%'
+          width: '50%',
         },
         {
           name: '名称4',
           nameStyle: '',
           contentStyle: 'color:blue',
           key: 'name4',
-          width: '50%'
-        }
-      ]
+          width: '50%',
+        },
+      ],
     }
   },
   created() {
-    console.log(formartDate(new Date()))
     // this.config.tableConfig.exportFileName = '自定义下载名称'
   },
   mounted() {},
@@ -96,8 +95,8 @@ export default {
     },
     selfActionClick(item) {
       console.log(item)
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="less" scoped></style>

@@ -4,22 +4,18 @@
     <a-button type="primary" @click="openModal">打开弹窗</a-button>
     <Modal v-model="visible" :width="600" title="" @ok="handleOK" @cancel="handleCancel">
       <!-- <div style="text-align: center">内容</div> -->
-      <div class="flex_box" style="text-align:center ;width:100%;justify-content:center">
-        <div>
-          me
-        </div>
+      <div class="flex_box" style="text-align: center; width: 100%; justify-content: center">
+        <div>me</div>
 
         <img
-          style="width:100px"
+          style="width: 100px"
           src="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1312925412,4224261167&fm=26&gp=0.jpg"
           alt=""
         />
-        <div style="margin:0 10px">
-          ❥
-        </div>
+        <div style="margin: 0 10px">❥</div>
 
         <img
-          style="width:100px"
+          style="width: 100px"
           src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=4206798547,2967237176&fm=26&gp=0.jpg"
           alt=""
         />
@@ -30,7 +26,8 @@
       <VirtualScroll :itemNum="8" :oneLineItemNum="4" :itemH="55" v-model="list3" :sourceData="sourceData">
         <div class="flex_box3">
           <div
-            v-for="item in list3"
+            v-for="(item, i) in list3"
+            :key="i + 'p'"
             style="
               width: 22%;
               height: 40px;
@@ -40,7 +37,7 @@
               background: #f50;
               text-align: center;
               line-height: 40px;
-          "
+            "
           >
             {{ item.name }}
           </div>
@@ -48,7 +45,7 @@
       </VirtualScroll>
     </div>
     <div class="title">表格组件</div>
-    <a-button type="primary" @click="handleExport" style="margin:10px 0"> 导出 </a-button>
+    <a-button type="primary" @click="handleExport" style="margin: 10px 0"> 导出 </a-button>
     <Table
       :dataList="sourceData"
       :columns="tableColumns"
@@ -70,7 +67,7 @@
     </Table>
     <div class="title">格式化渲染组件</div>
     <FormatRender style="width: 50%" :data="formatData" :columns="formatColums" class="component_content">
-      <div slot="action" slot-scope="{ data }">
+      <div slot="action">
         <a-button @click="handleSubmit" type="primary">提交</a-button>
       </div>
     </FormatRender>
@@ -116,38 +113,38 @@ export default {
           // 每当组件数据更新时都会触发，如果数据频繁更新就会影响性能，对于更新不频繁的组件可使用此方式,
           // 渲染优先级 slot>renderHtml>默认
 
-          width: '100%'
+          width: '100%',
         },
         {
           name: '状态',
           nameStyle: '',
-          renderHtml: data => {
+          renderHtml: (data) => {
             let fontStyle = {
               100: {
                 text: '状态一',
-                style: 'color:red;font-size:18px'
+                style: 'color:red;font-size:18px',
               },
               200: {
                 text: '状态二',
-                style: 'color:blue;font-size:20px'
-              }
+                style: 'color:blue;font-size:20px',
+              },
             }
             console.log(fontStyle)
             //类型：function
             return `<span style=${fontStyle[data.status].style}>${fontStyle[data.status].text}<span>`
           },
-          width: '50%'
+          width: '50%',
         },
         {
           name: '名称4',
           nameStyle: '',
           contentStyle: 'color:blue',
           key: 'name4',
-          renderHtml: data => {
+          renderHtml: (data) => {
             //类型：function
             return `<span >555<span>`
           },
-          width: '50%'
+          width: '50%',
         },
         {
           name: '操作',
@@ -155,14 +152,14 @@ export default {
           contentStyle: '',
           renderSlot: true,
           key: 'action',
-          width: '50%'
-        }
+          width: '50%',
+        },
       ],
       formatData: {
         name: '能源管理',
         name2: '格式化组件',
         status: 100,
-        name4: '阿萨德大道'
+        name4: '阿萨德大道',
       },
       defautInfo: {
         // name: '陈浩南'
@@ -173,10 +170,10 @@ export default {
           label: '名称',
           placeholder: '请输入名称',
           title: {
-            text: '问号提示语'
+            text: '问号提示语',
           },
           prefix: {
-            iconType: 'user'
+            iconType: 'user',
           },
           key: 'name', // 字段名
           type: '', // 表单类型 (text,password,select,date,number,radio,checkbox,switch,textarea,slot) 默认text
@@ -187,9 +184,9 @@ export default {
           rules: [
             {
               whitespace: true,
-              message: '不能输入纯空格'
-            }
-          ]
+              message: '不能输入纯空格',
+            },
+          ],
         },
         {
           label: '数字',
@@ -198,13 +195,13 @@ export default {
           min: 10,
           max: 999,
           key: 'num', // 字段名
-          required: false //是否必填
+          required: false, //是否必填
         },
         {
           label: '密码',
           placeholder: '请输入密码(6-10位包含数字和字母)',
           prefix: {
-            iconType: 'lock'
+            iconType: 'lock',
           },
           key: 'password', // 字段名称
           type: 'password',
@@ -225,10 +222,10 @@ export default {
           rules: [
             {
               pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,10}$/, // 正则校验
-              message: '请正确输入密码' //报错提示信息
-            }
+              message: '请正确输入密码', //报错提示信息
+            },
           ],
-          required: false //是否必填
+          required: false, //是否必填
         },
         {
           label: '开始时间',
@@ -245,7 +242,7 @@ export default {
               callback()
             }
           },
-          rules: []
+          rules: [],
         },
         {
           label: '结束时间',
@@ -268,25 +265,25 @@ export default {
             } else {
               callback()
             }
-          }
+          },
         },
 
         {
           label: '开关',
           title: {
-            text: '开关'
+            text: '开关',
           },
           key: 'kaiguan',
           type: 'switch',
           initValue: true,
-          required: false //是否必填
+          required: false, //是否必填
         },
         {
           label: '自定义',
           key: 'kaiguan',
           type: 'slot',
           slotName: 'aa',
-          required: true //是否必填
+          required: true, //是否必填
         },
 
         {
@@ -297,19 +294,19 @@ export default {
           option: [
             {
               name: '大',
-              value: 1
+              value: 1,
             },
             {
               name: '中',
-              value: 2
+              value: 2,
             },
             {
               name: '小',
-              value: 3
-            }
+              value: 3,
+            },
           ],
 
-          required: true //是否必填
+          required: true, //是否必填
         },
         {
           label: '类型2',
@@ -320,14 +317,14 @@ export default {
           option: [
             {
               name: '大',
-              value: 1
+              value: 1,
             },
             {
               name: '小',
-              value: 2
-            }
+              value: 2,
+            },
           ],
-          required: false //是否必填
+          required: false, //是否必填
         },
         {
           label: '选择菜单',
@@ -339,20 +336,20 @@ export default {
           option: [
             {
               name: '甲',
-              value: '1'
+              value: '1',
             },
             {
               name: '乙',
-              value: '2'
+              value: '2',
             },
             {
               name: '丙',
-              value: '3'
+              value: '3',
             },
             {
               name: '丁',
-              value: '4'
-            }
+              value: '4',
+            },
           ],
           // 自定义校验
           validator: (rule, value, callback) => {
@@ -363,15 +360,15 @@ export default {
             callback()
           },
           type: 'select',
-          required: true //是否必填
+          required: true, //是否必填
         },
         {
           label: '备注',
           placeholder: '请输入备注',
           key: 'remark', // 字段名称
           type: 'textarea',
-          required: false //是否必填
-        }
+          required: false, //是否必填
+        },
       ],
       // 表格配置
       MTableColumns: [
@@ -382,13 +379,13 @@ export default {
           align: 'center', //left center right
           ellipsis: true,
           width: screen.availWidth * 0.1,
-          sort: true
+          sort: true,
         },
         {
           title: 'Md',
           width: 200,
           key: 'num2',
-          align: 'center'
+          align: 'center',
         },
         {
           title: 'Address',
@@ -396,7 +393,7 @@ export default {
             {
               title: 'Street',
               key: 'Street',
-              width: 200
+              width: 200,
             },
             {
               title: 'Block',
@@ -406,26 +403,26 @@ export default {
                   dataIndex: 'building',
                   key: 'building',
 
-                  width: 100
+                  width: 100,
                 },
                 {
                   title: 'Door No.',
                   dataIndex: 'number',
                   key: 'number',
                   renderSlot: true,
-                  width: 100
-                }
-              ]
-            }
-          ]
+                  width: 100,
+                },
+              ],
+            },
+          ],
         },
         {
           title: '操作',
           width: 200,
           key: 'action',
           renderSlot: true,
-          align: 'center'
-        }
+          align: 'center',
+        },
       ],
       tableColumns: [
         {
@@ -435,7 +432,7 @@ export default {
           align: 'center', //left center right
           ellipsis: true,
           width: screen.availWidth * 0.1,
-          sort: true
+          sort: true,
         },
         {
           title: 'Md',
@@ -443,18 +440,18 @@ export default {
           key: 'name2',
           align: 'center',
           // renderSlot: true,
-          renderHtml: item => {
+          renderHtml: (item) => {
             console.log('更新')
             return `<span>${item.name}自定义2</span>`
-          }
+          },
         },
         {
           title: '操作',
           width: 200,
           key: 'action',
           renderSlot: true,
-          align: 'center'
-        }
+          align: 'center',
+        },
       ],
       total: 0,
       left: '',
@@ -463,22 +460,22 @@ export default {
       page: 1,
       list3: [],
       sourceData2: [],
-      pageSize: 10
+      pageSize: 10,
     }
   },
   created() {
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < 10000; i++) {
       this.sourceData.push({
         name: `name${i + 1}`,
         num: i + 1,
-        num2: i * 10
+        num2: i * 10,
       })
     }
     for (let i = 0; i < 10; i++) {
       this.sourceData2.push({
         name: `name${i + 1}`,
         num: i + 1,
-        num2: i * 10
+        num2: i * 10,
       })
     }
   },
@@ -514,8 +511,8 @@ export default {
       if (values) {
         console.log(values)
       }
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="less" scoped>
