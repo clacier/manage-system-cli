@@ -398,6 +398,9 @@ export default {
         }
       })
       return data
+    },
+    resetFileds() {
+      this.form.resetFields()
     }
   }
 }

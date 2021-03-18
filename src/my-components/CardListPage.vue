@@ -5,7 +5,7 @@
       <div class="search_box">
         <FormList
           :columns="searchList"
-          :defautInfo="searchInfo"
+          :defaultInfo="searchInfo"
           ref="searchForm"
           :isSearch="true"
           style="inline-hegiht:normal"
@@ -39,7 +39,7 @@
     <Modal v-model="visible.edit" :width="modalWidth.edit" :title="modalTitle" @ok="handleOK">
       <div class="edit_modal_content">
         <slot name="editLeftContent"></slot>
-        <FormList :columns="formList" :defautInfo="detailInfo" ref="Form" style="width:100%">
+        <FormList :columns="formList" :defaultInfo="detailInfo" ref="Form" style="width:100%">
           <slot v-for="slotItem in slotFormList" :name="slotItem.slotName" :slot="slotItem.slotName"></slot>
         </FormList>
       </div>
@@ -181,6 +181,9 @@ export default {
     handleAdd() {
       //   this.list2 = this.list2.slice(0, 500)
       //   return false
+      if (this.openAdd) {
+        this.openAdd(this.$parent)
+      }
       this.form.resetFields()
       this.detailInfo = ''
       this.type = 1
