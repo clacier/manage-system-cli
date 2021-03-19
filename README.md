@@ -1,5 +1,5 @@
 <h1 align="center">中后台系统项目搭建脚手架</h1>
-<div align="center">
+<div >
  重要目录
  src
  <div>
@@ -10,7 +10,9 @@
    <div>---format.js   工具函数 </div>
    <div>项目中有各个组件的示例</div>   
 </div>
+
 - 安装依赖
+
 ```
 yarn install
 ```
