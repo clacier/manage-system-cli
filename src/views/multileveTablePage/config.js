@@ -133,25 +133,24 @@ const config = {
     //   align: 'center'
     // },
     {
-      title: 'Address',
+      title: '信息',
       children: [
         {
-          title: 'Street',
-          key: 'name',
+          title: '电话',
+          key: 'phone',
           width: '10%'
         },
         {
-          title: 'Block',
+          title: '银行信息',
           children: [
             {
-              title: 'Building',
-              key: 'address',
+              title: '银行账户',
+              key: 'bank',
               width: '10%'
             },
             {
-              title: 'Door No.',
-              dataIndex: 'number',
-              key: 'number',
+              title: '开户行名称',
+              key: 'banKnum',
               renderSlot: true,
               width: '10%'
             }
@@ -169,7 +168,7 @@ const config = {
     // 删 改 查 功能由组件自行处理
     {
       title: '操作',
-      width: '20%',
+      width: '10%',
       key: 'action',
       renderSlot: true,
       actionList: [
