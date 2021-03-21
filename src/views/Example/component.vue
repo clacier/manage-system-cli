@@ -446,18 +446,24 @@ export default {
 
           key: 'num', //字段名称- 非slot渲染时必须定义 也作为唯一标识，不能重复
           align: 'center', //left center right
-          ellipsis: true,
+
           width: screen.availWidth * 0.1,
           sort: true,
+        },
+        {
+          title: 'name',
+          width: 200,
+          key: 'name',
+          align: 'center',
+          ellipsis: true, // 超出自动省略
         },
         {
           title: 'Md',
           width: 500,
           key: 'name2',
           align: 'center',
-          // renderSlot: true,
+          ellipsis: true, // 超出自动省略
           renderHtml: (item) => {
-            console.log('更新')
             return `<span>${item.name}自定义2</span>`
           },
         },
@@ -487,9 +493,11 @@ export default {
         num2: i * 10,
       })
     }
+
     for (let i = 0; i < 10; i++) {
       this.sourceData2.push({
         name: `name${i + 1}`,
+        status: i,
         num: i + 1,
         num2: i * 10,
       })

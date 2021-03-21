@@ -37,13 +37,19 @@ export default {
         {
           title: '类型',
           key: 'type',
-          width: 200,
+          width: 100,
+          align: 'center',
+        },
+        {
+          title: '示例',
+          key: 'example',
+          width: 320,
           align: 'center',
         },
         {
           title: '默认值',
           key: 'default',
-          width: 200,
+          width: 100,
           align: 'center',
         },
         {
