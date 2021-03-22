@@ -1,5 +1,72 @@
 const config = [
   {
+    title: '弹窗组件props说明',
+    data: [
+      {
+        parmas: 'v-model',
+        text: '绑定控制显示的变量'
+      },
+
+      {
+        parmas: 'width',
+        text: '弹窗宽度',
+        type: 'number',
+        default: '520'
+      },
+      {
+        parmas: 'title',
+        text: '弹窗标题',
+        type: 'string'
+      },
+      {
+        parmas: '@ok',
+        text: '点击确定触发的事件',
+        type: 'function'
+      },
+      {
+        parmas: '@cancel',
+        text: '点击曲取消触发的事件，默认会关闭弹窗',
+        type: 'function'
+      },
+      {
+        parmas: 'hideFooter',
+        text: '是否隐藏弹窗底部',
+        type: 'boolean',
+        default: 'false'
+      }
+    ]
+  },
+  {
+    title: '局部性虚拟滚动组件props说明',
+    data: [
+      {
+        parmas: 'itemNum',
+        text: '显示的行数',
+        type: 'number'
+      },
+
+      {
+        parmas: 'itemH',
+        text: '每行高度',
+        type: 'number'
+      },
+      {
+        parmas: 'oneLineItemNum',
+        text: '每行元素显示的元素个数',
+        type: 'number'
+      },
+      {
+        parmas: 'sourceData',
+        text: '数据源',
+        type: 'array'
+      },
+      {
+        parmas: 'v-model',
+        text: '绑定用于展示的数组'
+      }
+    ]
+  },
+  {
     title: '表格组件props说明',
     data: [
       {
@@ -82,6 +149,19 @@ const config = [
         default: '-'
       },
       {
+        parmas: 'renderHtml',
+        text: '自定义渲染html',
+        type: 'function',
+        default: '-',
+        example: '`(item,i)=>{return <div>${item.name}</div> }`'
+      },
+      {
+        parmas: 'renderSlot',
+        text: '是否自定义渲染，当你的元素需要绑定事件时，需要采用插槽的方式，slot名为key值',
+        type: 'boolean',
+        default: 'false'
+      },
+      {
         parmas: 'align',
         text: '文本对齐方式',
         type: 'string',
@@ -130,7 +210,8 @@ const config = [
       },
       {
         parmas: 'title',
-        text: '表单提示，值为一个对象，例如:{text:`提示`}',
+        text: '表单提示，值为一个对象',
+        example: '{text:`提示`,style:`color:red`}',
         type: 'object',
         default: '-'
       },
@@ -143,8 +224,9 @@ const config = [
       },
       {
         parmas: 'option',
-        text: '类型为select，radio，checkbox时表单配置 例：[{name:`选择名称`,value:`值`}]',
+        text: '类型为select，radio，checkbox时表单配置 ',
         type: 'Array',
+        example: '例：[{name:`选择名称`,value:`值`}]',
         default: '-'
       },
 
@@ -156,7 +238,7 @@ const config = [
       },
       {
         parmas: 'key',
-        text: '绑定字段名类似v-modal',
+        text: '绑定字段名',
         type: 'string',
         default: '-'
       },

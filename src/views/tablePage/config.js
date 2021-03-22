@@ -1,5 +1,4 @@
 import { getList, add, edit, deleteNode } from '@/api/supplier/manage'
-import { message } from 'ant-design-vue'
 const config = {
   //   页面全局操作
   pageAction: [
@@ -52,17 +51,8 @@ const config = {
   // 页面顶部搜索配置项
   searchList: [
     {
-      placeholder: '请选开始时间',
-      key: 'startDate',
-      type: 'date',
-      label: '开始时间',
-      showTime: true,
-      validator: (rule, value, callback) => {
-        if (new Date(value).getTime() < new Date().getTime() && value) {
-          callback('开始时间不能小于当前时间')
-        }
-        callback()
-      }
+      placeholder: '供应商名称',
+      key: 'supplierName'
     }
   ],
   //  新增表单配置项

@@ -12,9 +12,6 @@ import ProLayout, { PageHeaderWrapper } from '@ant-design-vue/pro-layout'
 import themePluginConfig from '../config/themePluginConfig'
 import { pagination, empty } from 'ant-design-vue'
 import { Table, Modal } from '@/my-components'
-import StoreChart from 'idmakers-reportstore-charts'
-console.log(StoreChart)
-Vue.component(StoreChart[1].name, StoreChart[1])
 // mock
 // WARNING: `mockjs` NOT SUPPORT `IE` PLEASE DO NOT USE IN `production` ENV.
 import './mock'

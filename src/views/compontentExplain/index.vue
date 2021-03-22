@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div v-for="item in config">
-      <div style="margin:10px 0;color:#1890ff">{{ item.title }}</div>
+    <div v-for="(item, i) in config" :key="i + 'q'">
+      <div style="margin: 10px 0; color: #1890ff">{{ item.title }}</div>
       <Table :columns="columns" :dataList="item.data"></Table>
     </div>
   </div>
@@ -26,36 +26,42 @@ export default {
           title: '参数',
           key: 'parmas',
           width: 200,
-          align: 'center'
+          align: 'center',
         },
         {
           title: '说明',
           key: 'text',
           width: 400,
-          align: 'center'
+          align: 'center',
         },
         {
           title: '类型',
           key: 'type',
-          width: 200,
-          align: 'center'
+          width: 100,
+          align: 'center',
+        },
+        {
+          title: '示例',
+          key: 'example',
+          width: 320,
+          align: 'center',
         },
         {
           title: '默认值',
           key: 'default',
-          width: 200,
-          align: 'center'
+          width: 100,
+          align: 'center',
         },
         {
           title: '可选值',
           key: 'val',
           width: 400,
-          align: 'center'
-        }
-      ]
+          align: 'center',
+        },
+      ],
     }
   },
-  methods: {}
+  methods: {},
 }
 </script>
 <style lang="less" scoped></style>

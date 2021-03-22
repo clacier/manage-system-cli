@@ -6,8 +6,8 @@
     ---my-components 二次封装组件 本脚手架大多数功能全都集中在这些组件中 
   </div>
  <div>---utils </div>
-   <div>---request.js  二次封装的请求函数 </div>
-   <div>---format.js   工具函数 </div>
+   <div>  ---request.js  二次封装的请求函数 </div>
+   <div>  ---format.js   工具函数 </div>
    <div>项目中有各个组件的示例</div>   
 </div>
 

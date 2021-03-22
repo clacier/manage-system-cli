@@ -16,9 +16,9 @@
               :class="{ isExport: item.isExport, pointer: checkExport && isExport }"
               @click="handleCheckExport(item)"
               :key="index + 'q'"
-              :style="
-                `width:${item.children ? '' : item.width}px;text-align:${item.align};border:${showBorder ? '' : 'none'}`
-              "
+              :style="`width:${item.children ? '' : item.width}px;text-align:${item.align};border:${
+                showBorder ? '' : 'none'
+              }`"
             >
               <div class="table_header_item">
                 <span> {{ item.title }}</span>
@@ -39,11 +39,9 @@
           ref="table_content"
           :class="{ table_content_border: dataList.length == 0 }"
           @scroll="hanldeScroll"
-          :style="
-            `height:${viewH}px;overflow-y:auto;position:${dataList.length == 0 ? 'relative' : ''}; min-height:${
-              dataList.length == 0 ? '300px' : ''
-            }`
-          "
+          :style="`height:${viewH}px;overflow-y:auto;position:${dataList.length == 0 ? 'relative' : ''}; min-height:${
+            dataList.length == 0 ? '300px' : ''
+          }`"
         >
           <div :style="{ height: scorllH }">
             <tbody :style="`transform:translateY(${offSetY}px); `" id="tbody">
@@ -56,9 +54,9 @@
                 <td
                   v-if="showCheck"
                   class="table_content_item"
-                  :style="
-                    `width:50px;align-items:center;justify-content:center;border:${showBorder ? '' : 'none'};padding:0`
-                  "
+                  :style="`width:50px;align-items:center;justify-content:center;border:${
+                    showBorder ? '' : 'none'
+                  };padding:0`"
                 >
                   <a-checkbox @change="checkChange(item)" :checked="item.isCheck"></a-checkbox>
                 </td>
@@ -67,29 +65,25 @@
                   :key="key + 'w'"
                   :id="`td_${item2.key}_${index}`"
                   class="table_content_item"
-                  :style="
-                    `width:${item2.children ? 'auto' : item2.width + 'px'};text-align:${item2.align};border:${
-                      showBorder ? '' : 'none'
-                    };justify-content:${item2.align};align-items:center;padding:0 10px`
-                  "
+                  :style="`width:${item2.children ? 'auto' : item2.width + 'px'};text-align:${item2.align};border:${
+                    showBorder ? '' : 'none'
+                  };justify-content:${item2.align};align-items:center;padding:0 10px`"
                 >
-                  <div>
-                    <slot
-                      :class="{ ellipsis: item2.ellipsis }"
-                      v-if="item2.renderSlot"
-                      :name="item2.key"
-                      :columnsItem="item2"
-                      :item="item"
-                      :index="index"
-                    ></slot>
-                    <div
-                      :class="{ ellipsis: item2.ellipsis }"
-                      v-else-if="item2.renderHtml"
-                      v-html="item['renderHtmlText_' + item2.key]"
-                    ></div>
-                    <div v-else :title="item[item2.key]" :class="{ ellipsis: item2.ellipsis }">
-                      {{ item[item2.key] ? item[item2.key] : '-' }}
-                    </div>
+                  <slot
+                    :class="{ ellipsis: item2.ellipsis }"
+                    v-if="item2.renderSlot"
+                    :name="item2.key"
+                    :columnsItem="item2"
+                    :item="item"
+                    :index="index"
+                  ></slot>
+                  <div
+                    :class="{ ellipsis: item2.ellipsis }"
+                    v-else-if="item2.renderHtml"
+                    v-html="item['renderHtmlText_' + item2.key]"
+                  ></div>
+                  <div v-else :title="item[item2.key]" :class="{ ellipsis: item2.ellipsis }">
+                    {{ item[item2.key] ? item[item2.key] : '-' }}
                   </div>
                 </td>
               </tr>
@@ -105,11 +99,9 @@
           class="table_content"
           ref="table_content"
           :class="{ table_content_border: dataList.length == 0 }"
-          :style="
-            `height:${scroll.y ? scroll.y + 'px' : 'auto'}; position:${
-              dataList.length == 0 ? 'relative' : ''
-            }; min-height:${dataList.length == 0 ? '300px' : ''}`
-          "
+          :style="`height:${scroll.y ? scroll.y + 'px' : 'auto'}; position:${
+            dataList.length == 0 ? 'relative' : ''
+          }; min-height:${dataList.length == 0 ? '300px' : ''}`"
         >
           <div>
             <tbody id="tbody">
@@ -124,42 +116,23 @@
                   :key="item2.key"
                   class="table_content_item"
                   :id="`td_${item2.key}_${index}`"
-                  :style="
-                    `width:${item2.width}px;text-align:${item2.align};justify-content:${item2.align};align-items:center`
-                  "
+                  :style="`width:${item2.width}px;text-align:${item2.align};justify-content:${item2.align};align-items:center`"
                 >
-                  <div v-if="item2.children">
-                    <td v-for="tdItem in item2.children" :key="tdItem.key + 'q'">
-                      <slot
-                        :id="`td_${tdItem.key}`"
-                        v-if="tdItem.renderSlot"
-                        :name="tdItem.key"
-                        :columnsItem="tdItem"
-                        :item="item"
-                      ></slot>
-                      <div v-else-if="tdItem.renderHtml" v-html="item['renderHtmlText_' + tdItem.key]"></div>
-                      <div v-else :title="item[tdItem.key]">
-                        {{ item[tdItem.key] || item[tdItem.key] === 0 ? item[tdItem.key] : '-' }}
-                      </div>
-                    </td>
-                  </div>
-                  <div v-else>
-                    <slot
-                      :class="{ ellipsis: item2.ellipsis }"
-                      v-if="item2.renderSlot"
-                      :name="item2.key"
-                      :columnsItem="item2"
-                      :item="item"
-                      :index="index"
-                    ></slot>
-                    <div
-                      :class="{ ellipsis: item2.ellipsis }"
-                      v-else-if="item2.renderHtml"
-                      v-html="item['renderHtmlText_' + item2.key]"
-                    ></div>
-                    <div v-else :title="item[item2.key]" :class="{ ellipsis: item2.ellipsis }">
-                      {{ item[item2.key] ? item[item2.key] : '-' }}
-                    </div>
+                  <slot
+                    :class="{ ellipsis: item2.ellipsis }"
+                    v-if="item2.renderSlot"
+                    :name="item2.key"
+                    :columnsItem="item2"
+                    :item="item"
+                    :index="index"
+                  ></slot>
+                  <div
+                    :class="{ ellipsis: item2.ellipsis }"
+                    v-else-if="item2.renderHtml"
+                    v-html="item['renderHtmlText_' + item2.key]"
+                  ></div>
+                  <div v-else :title="item[item2.key]" :class="{ ellipsis: item2.ellipsis }">
+                    {{ item[item2.key] ? item[item2.key] : '-' }}
                   </div>
                 </td>
               </tr>
@@ -197,63 +170,63 @@ export default {
         }
         this.formatRenderHtml()
       },
-      deep: true
+      deep: true,
     },
 
     rowCheck(val) {
       this.showCheck = val
-    }
+    },
   },
   props: {
     itemNum: {
       type: Number,
-      default: 5
+      default: 5,
     }, // 展示个数
     itemH: {
       type: Number,
-      default: 40
+      default: 40,
     }, // 表格单行高度
     dataList: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     widthDrag: {
       type: Boolean,
-      default: false
+      default: false,
     },
     columns: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     scroll: {
       type: Object,
       default: () => {
         return {
           y: Number,
-          x: Number
+          x: Number,
         }
-      }
+      },
     },
     checkExport: {
       type: Boolean,
-      default: false
+      default: false,
     },
     virtualScroll: {
       type: Boolean,
-      default: false
+      default: false,
     },
     exportFileName: {
       type: String,
-      default: '导出'
+      default: '导出',
     },
     showBorder: {
       type: Boolean,
-      default: true
+      default: true,
     },
     rowCheck: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
@@ -277,11 +250,11 @@ export default {
       scorllH: '', // 列表总高度
       offSetY: '',
       page: 1,
-      pageSize: 10
+      pageSize: 10,
     }
   },
   created() {
-    this.columns.forEach(item => {
+    this.columns.forEach((item) => {
       this.tableW += parseInt(item.width)
     })
     if (this.$props.rowCheck) {
@@ -336,10 +309,10 @@ export default {
       }
     },
     formatRenderHtml() {
-      this.columns.forEach(item2 => {
+      this.columns.forEach((item2) => {
         if (item2.renderHtml) {
-          this.list.forEach(item => {
-            item['renderHtmlText_' + item2.key] = item2.renderHtml(item)
+          this.list.forEach((item, i) => {
+            item['renderHtmlText_' + item2.key] = item2.renderHtml(item, i)
           })
         }
       })
@@ -357,13 +330,13 @@ export default {
     handleAllCheck(e) {
       console.log(e)
       if (e.target.checked) {
-        this.list.forEach(item => (item.isCheck = true))
-        this.dataList.forEach(item => (item.isCheck = true))
+        this.list.forEach((item) => (item.isCheck = true))
+        this.dataList.forEach((item) => (item.isCheck = true))
         this.renderA = !this.renderA
         this.checkList = this.dataList
       } else {
-        this.list.forEach(item => (item.isCheck = true))
-        this.dataList.forEach(item => (item.isCheck = false))
+        this.list.forEach((item) => (item.isCheck = true))
+        this.dataList.forEach((item) => (item.isCheck = false))
         this.renderA = !this.renderA
         this.checkList = []
       }
@@ -375,7 +348,7 @@ export default {
       if (item.isCheck) {
         this.checkList.push(item)
       } else {
-        this.checkList = this.checkList.filter(i => i.num != item.num)
+        this.checkList = this.checkList.filter((i) => i.num != item.num)
         this.checkAll = false
       }
       this.renderA = !this.renderA
@@ -391,7 +364,7 @@ export default {
         if (this.isExport) {
           this.checkExportTable()
         } else {
-          this.columns.forEach(item => {
+          this.columns.forEach((item) => {
             item.isExport = true
           })
           this.renderA = !this.renderA
@@ -403,7 +376,6 @@ export default {
       }
     },
     exportTable() {
-      let titleName = ''
       //列标题
       let str = ``
       let tableHeader = document.querySelector('#thead').innerHTML
@@ -434,16 +406,15 @@ export default {
     },
     // 选择性导出
     checkExportTable() {
-      let titleName = ''
       //列标题
       let str = `<thead><tr>`
       let tableHeader = ''
-      let tablecolumns = this.columns.filter(item => item.isExport)
+      let tablecolumns = this.columns.filter((item) => item.isExport)
       if (tablecolumns.length == 0) {
         message.warning('请选择你将要导出的表格列')
         return
       }
-      tablecolumns.forEach(item => {
+      tablecolumns.forEach((item) => {
         tableHeader += `<th style=text-align:${item.align}>${item.title}</th>`
       })
       str += `${tableHeader}</tr></thead>`
@@ -451,7 +422,7 @@ export default {
         for (let i = 0; i < this.dataList.length; i++) {
           str += '<tr>'
           let item = this.dataList[i]
-          tablecolumns.forEach(cloumItem => {
+          tablecolumns.forEach((cloumItem) => {
             let tdHtml = ''
             if (cloumItem.renderHtml) {
               tdHtml = `<td style=text-align:${item.align}>${cloumItem.renderHtml(item)}</td>`
@@ -466,8 +437,7 @@ export default {
       } else {
         for (let i = 0; i < this.dataList.length; i++) {
           str += '<tr>'
-          let item = this.dataList[i]
-          tablecolumns.forEach(cloumItem => {
+          tablecolumns.forEach((cloumItem) => {
             let tdHtml = ''
             tdHtml = document.querySelector(`#td_${cloumItem.key}_${i}`).innerHTML
             str += `<td style=text-align:${cloumItem.align}>${tdHtml + '\t'}</td>`
@@ -497,7 +467,7 @@ export default {
       link.download = `${this.$props.exportFileName}`
       link.click()
       this.isExport = false
-      this.columns.forEach(item => {
+      this.columns.forEach((item) => {
         item.isExport = false
       })
       this.renderA = !this.renderA
@@ -505,14 +475,14 @@ export default {
     base64(s) {
       return window.btoa(unescape(encodeURIComponent(s)))
     },
-    splitDown: function(e, index) {
+    splitDown: function (e, index) {
       // 鼠标按下
       const startX = e.pageX
       this.xian_left = e.pageX
       this.isDrag = true
       const width = parseInt(this.columns[index].width)
       const tableW = this.tableW
-      window.onmousemove = e => {
+      window.onmousemove = (e) => {
         if (this.isDrag) {
           document.body.style.cursor = 'col-resize'
           // 偏移量
@@ -524,7 +494,7 @@ export default {
           }
         }
       }
-      window.onmouseup = e => {
+      window.onmouseup = (e) => {
         // 鼠标松开
         if (this.isDrag) {
           const l = parseInt(e.pageX - startX)
@@ -539,8 +509,8 @@ export default {
           window.onmouseup = null
         }
       }
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="less" scoped>
@@ -649,6 +619,7 @@ export default {
       }
     }
     .ellipsis {
+      width: 100%;
       overflow: hidden;
       text-overflow: ellipsis;
       word-break: keep-all;

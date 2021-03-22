@@ -47,7 +47,7 @@ const errorHandler = error => {
 // request interceptor
 request.interceptors.request.use(config => {
   if (!config.hideLoading) {
-    store.commit('set_loading', true) // 请求加载框
+    // store.commit('set_loading', true) // 请求加载框
   }
 
   config.baseURL = window.BASE_URL

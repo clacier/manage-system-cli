@@ -4,9 +4,9 @@
       <!-- 页面头部自定义   -->
       <template slot="pageHeader">
         <a-tabs default-active-key="1" style="width: 50%">
-          <a-tab-pane key="1" tab="Tab 1"> </a-tab-pane>
-          <a-tab-pane key="2" tab="Tab 2" force-render> </a-tab-pane>
-          <a-tab-pane key="3" tab="Tab 3"> </a-tab-pane>
+          <a-tab-pane key="1" tab="类型一"> </a-tab-pane>
+          <a-tab-pane key="2" tab="类型二" force-render> </a-tab-pane>
+          <a-tab-pane key="3" tab="类型三"> </a-tab-pane>
         </a-tabs>
       </template>
       <!-- 表格自定义  -->
