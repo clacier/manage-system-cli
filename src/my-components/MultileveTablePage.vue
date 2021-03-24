@@ -109,7 +109,7 @@
 <script>
 const formItemLayout = {
   labelCol: { span: 4 },
-  wrapperCol: { span: 18 }
+  wrapperCol: { span: 18 },
 }
 import { message, Modal } from 'ant-design-vue'
 import { FormList, MultileveTable } from '@/my-components'
@@ -120,12 +120,12 @@ export default {
   props: {
     config: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     searchParams: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
   data() {
     return {
@@ -136,7 +136,7 @@ export default {
       exportFileName: '',
       visible: {
         edit: false,
-        detail: false
+        detail: false,
       },
       searchInfo: {},
       total: 100,
@@ -153,7 +153,7 @@ export default {
       page: 1,
       list3: [],
       tableAction: [],
-      pageSize: 10
+      pageSize: 10,
     }
   },
   created() {
@@ -163,11 +163,11 @@ export default {
         num: i + 1,
         type: 1,
         kaiguan: true,
-        date: '2017-06-07'
+        date: '2017-06-07',
       })
     }
-    this.slotFormList = this.formList.filter(item => item.type === 'slot')
-    this.tableSlotList = this.columns.filter(item => item.renderSlot)
+    this.slotFormList = this.formList.filter((item) => item.type === 'slot')
+    this.tableSlotList = this.columns.filter((item) => item.renderSlot)
   },
   mounted() {
     // this.getList()
@@ -177,6 +177,7 @@ export default {
       if (this.openAdd) {
         this.openAdd(this.$parent)
       }
+      this.$emit('openAdd')
       this.$refs.Form.form.resetFields()
       this.detailInfo = ''
       this.type = 1
@@ -212,7 +213,7 @@ export default {
           content: actionItem.promptContent ? actionItem.promptContent : '是否删除该数据？',
           onOk: () => {
             this.deleteOk(item, actionItem.fieldName)
-          }
+          },
         })
       } else if (actionItem.type === 'edit') {
         this.handleEdit(item, actionItem.fieldName)
@@ -226,6 +227,7 @@ export default {
     },
     handleEdit(item, editFieldName) {
       this.form.resetFields()
+      this.$emit('openEdit')
       this.detailInfo = item
       this.actItem = item
       this.editFieldName = editFieldName
@@ -238,12 +240,12 @@ export default {
       this.searchInfo = this.$refs.searchForm.handleSubmit()
       let params = {
         ...this.searchInfo,
-        ...this.searchParams
+        ...this.searchParams,
       }
       params[this.pageInfo.pageNum] = this.page
       params[this.pageInfo.pageSize] = this.pageSize
-      let dateFormArr = this.searchList.filter(item => item.type === 'date' || item.type === 'dateTime')
-      dateFormArr.forEach(item => {
+      let dateFormArr = this.searchList.filter((item) => item.type === 'date' || item.type === 'dateTime')
+      dateFormArr.forEach((item) => {
         params[item.key] = params[item.key] ? params[item.key].format('YYYY-MM-DD HH:mm:ss') : ''
       })
       if (this.searchFunc) {
@@ -332,8 +334,8 @@ export default {
           }
         }
       }
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="less" scoped>

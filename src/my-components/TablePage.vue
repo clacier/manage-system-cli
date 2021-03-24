@@ -183,6 +183,7 @@ export default {
       if (this.openAdd) {
         this.openAdd(this.$parent)
       }
+      this.$emit('openAdd')
       this.$refs.Form.form.resetFields()
       this.detailInfo = ''
       this.type = 1
@@ -231,6 +232,7 @@ export default {
       this.visible[type] = false
     },
     handleEdit(item, editFieldName) {
+      this.$emit('openEdit')
       this.form.resetFields()
       this.detailInfo = item
       this.actItem = item
