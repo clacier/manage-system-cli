@@ -115,7 +115,7 @@
 <script>
 const formItemLayout = {
   labelCol: { span: 4 },
-  wrapperCol: { span: 18 },
+  wrapperCol: { span: 18 }
 }
 import { message, Modal } from 'ant-design-vue'
 import { VirtualScroll, FormList } from '@/my-components'
@@ -126,12 +126,12 @@ export default {
   props: {
     config: {
       type: Object,
-      default: () => {},
+      default: () => {}
     },
     searchParams: {
       type: Object,
-      default: () => {},
-    },
+      default: () => {}
+    }
   },
   data() {
     return {
@@ -142,7 +142,7 @@ export default {
       exportFileName: '',
       visible: {
         edit: false,
-        detail: false,
+        detail: false
       },
       searchInfo: {},
       total: 100,
@@ -159,7 +159,7 @@ export default {
       page: 1,
       list3: [],
       tableAction: [],
-      pageSize: 10,
+      pageSize: 10
     }
   },
   created() {
@@ -172,8 +172,8 @@ export default {
     //     date: '2017-06-07'
     //   })
     // }
-    this.slotFormList = this.formList.filter((item) => item.type === 'slot')
-    this.tableSlotList = this.columns.filter((item) => item.renderSlot)
+    this.slotFormList = this.formList.filter(item => item.type === 'slot')
+    this.tableSlotList = this.columns.filter(item => item.renderSlot)
   },
   mounted() {
     this.getList()
@@ -217,8 +217,8 @@ export default {
         Modal.confirm({
           content: actionItem.promptContent ? actionItem.promptContent : '是否删除该数据？',
           onOk: () => {
-            this.deleteOk(item, actionItem.fieldName)
-          },
+            this.deleteOk(item, actionItem.fieldName, actionItem.addFiled, actionItem.isUrlParmas)
+          }
         })
       } else if (actionItem.type === 'edit') {
         this.handleEdit(item, actionItem.fieldName)
@@ -244,12 +244,12 @@ export default {
       this.searchInfo = this.$refs.searchForm.handleSubmit()
       let params = {
         ...this.searchInfo,
-        ...this.searchParams,
+        ...this.searchParams
       }
       params[this.pageInfo.pageNum] = this.page
       params[this.pageInfo.pageSize] = this.pageSize
-      let dateFormArr = this.searchList.filter((item) => item.type === 'date' || item.type === 'dateTime')
-      dateFormArr.forEach((item) => {
+      let dateFormArr = this.searchList.filter(item => item.type === 'date' || item.type === 'dateTime')
+      dateFormArr.forEach(item => {
         params[item.key] = params[item.key] ? params[item.key].format('YYYY-MM-DD HH:mm:ss') : ''
       })
       if (this.searchFunc) {
@@ -296,19 +296,31 @@ export default {
         message.success('修改成功')
       }
     },
-    async deleteOk(item, fieldName) {
+    async deleteOk(item, fieldName, addFiled, isUrlParmas) {
       let params = {}
       params[fieldName] = item[fieldName]
+      if (Array.isArray(addFiled)) {
+        addFiled.forEach(item => {
+          params[item.fieldName] = item.value
+        })
+      }
       let falg = true
       if (this.delOkFunc instanceof Function) {
         falg = this.delOkFunc(item)
       }
       if (falg) {
         const { del } = this.api
-        const res = await del(params)
-        if (res.code === 2000) {
+        let res
+        if (isUrlParmas) {
+          console.log(item[fieldName])
+          res = await del(item[fieldName])
+        } else {
+          res = await del(params)
+        }
+
+        if (res) {
           this.getList()
-          message.success('删除成功')
+          message.success('操作成功')
         }
       }
     },
@@ -338,8 +350,8 @@ export default {
           }
         }
       }
-    },
-  },
+    }
+  }
 }
 </script>
 <style lang="less" scoped>

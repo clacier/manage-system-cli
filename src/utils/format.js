@@ -18,7 +18,7 @@ export function formatUrlParams(url) {
     let searchStr = url.split('?')[1]
     let parmasArr = searchStr.split('&')
     let parmas = {}
-    parmasArr.forEach((item) => {
+    parmasArr.forEach(item => {
       let key = item.split('=')[0]
       let value = item.split('=')[1]
       parmas[key] = value
@@ -31,8 +31,11 @@ export function toChinesNum(numParmas) {
   let changeNum = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九']
   let unit = ['', '十', '百', '千', '万']
   let num = parseInt(numParmas)
-  let getWan = (temp) => {
-    let strArr = temp.toString().split('').reverse()
+  let getWan = temp => {
+    let strArr = temp
+      .toString()
+      .split('')
+      .reverse()
     let newNum = ''
     for (let i = 0; i < strArr.length; i++) {
       newNum =
@@ -63,11 +66,11 @@ export function diffDateStr(oldTime, newTime) {
 }
 export function debounce(func, time) {
   let timer = null
-  return function () {
+  return function() {
     if (timer) {
       clearTimeout(timer)
     } else {
-      timer = setTimeout(function () {
+      timer = setTimeout(function() {
         func()
       }, time)
     }
@@ -133,5 +136,8 @@ export function largeNumberSum(num1, num2) {
       }
     }
   }
-  return sumStr.split('').reverse().join('')
+  return sumStr
+    .split('')
+    .reverse()
+    .join('')
 }

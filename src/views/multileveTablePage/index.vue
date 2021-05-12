@@ -33,7 +33,6 @@
 <script>
 import MultileveTablePage from '@/my-components/MultileveTablePage'
 import config from './config'
-import { debounce } from '@/utils/format'
 import { FormatRender } from '@/my-components'
 export default {
   name: 'TableListWrapper',
@@ -42,10 +41,10 @@ export default {
     return {
       config: config,
       searchParams: {
-        supplierAuditStatus: 1,
+        supplierAuditStatus: 1
       },
       actItem: {
-        name: '565656',
+        name: '565656'
       },
       formatColumns: [
         {
@@ -55,33 +54,33 @@ export default {
           contentStyle: '',
           renderSlot: true,
           slotName: 'name1',
-          width: '50%',
+          width: '50%'
         },
         {
           name: '名称2',
           key: 'name2',
           nameStyle: '',
           contentStyle: '',
-          renderHtml: (data) => {
+          renderHtml: data => {
             return `<span>${data.name}22222<span>`
           },
-          width: '100%',
+          width: '100%'
         },
         {
           name: '名称3',
           nameStyle: '',
           contentStyle: '',
           key: 'name3',
-          width: '50%',
+          width: '50%'
         },
         {
           name: '名称4',
           nameStyle: '',
           contentStyle: 'color:blue',
           key: 'name4',
-          width: '50%',
-        },
-      ],
+          width: '50%'
+        }
+      ]
     }
   },
   created() {
@@ -95,8 +94,8 @@ export default {
     },
     selfActionClick(item) {
       console.log(item)
-    },
-  },
+    }
+  }
 }
 </script>
 <style lang="less" scoped></style>
